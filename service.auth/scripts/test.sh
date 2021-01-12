@@ -1,18 +1,24 @@
 #!/bin/bash
+
+dbName="auth"
+dbUser="root"
+dbPassword="root"
+network="127.0.0.1:3306"
+
 # user_test
 go test -v tests/models/user/user_test.go \
-	-dbName="auth" -network="127.0.0.1:3306" \
-	-dbUser="docker" -dbPassword="docker"
+	-dbName=$dbName -network=$network \
+	-dbUser=$dbUser -dbPassword=$dbUser
 #user benchmark
 go test -bench=. tests/models/user/bench_test.go \
-	-dbName="auth" -network="127.0.0.1:3306" \
-	-dbUser="docker" -dbPassword="docker"
+	-dbName=$dbName -network=$network \
+	-dbUser=$dbUser -dbPassword=$dbUser
 
 #auth_test
 go test -v tests/auth/auth_test.go \
-	-dbName="auth" -network="127.0.0.1:3306" \
-	-dbUser="root" -dbPassword="root"
+	-dbName=$dbName -network=$network \
+	-dbUser=$dbUser -dbPassword=$dbUser
 # client test
 go test -v tests/client/client_test.go \
-	-dbName="auth" -network="127.0.0.1:3306" \
-	-dbUser="root" -dbPassword="root"
+	-dbName=$dbName -network=$network \
+	-dbUser=$dbUser -dbPassword=$dbUser

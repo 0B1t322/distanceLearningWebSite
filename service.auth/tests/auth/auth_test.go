@@ -4,13 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/0B1t322/auth-service/db"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"github.com/0B1t322/auth-service/models/user"
 	"github.com/0B1t322/auth-service/pkg/auth"
 )
 
 func TestFunc_GetJWT(t *testing.T) {
-	db.Init(false)
+	db.Init()
 	
 	err := user.NewUser("dandemin", "1234", "admin").AddUser()
 	if err != nil {

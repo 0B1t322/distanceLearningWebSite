@@ -32,7 +32,7 @@ func NewClient(
 	
 	c.conn = conn
 	c.authServiceClient = pb.NewAuthServiceClient(conn)
-
+	
 	return c, nil
 }
 

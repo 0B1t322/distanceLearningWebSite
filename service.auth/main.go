@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/0B1t322/auth-service/db"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	
 
 	log "github.com/sirupsen/logrus"
@@ -23,7 +23,7 @@ var (
 
 func main() {
 	// db.Init() alredy parse flags so we don't need to write this again
-	db.Init(true)
+	db.Init()
 	log.Info("db init all is okay!")
 
 	

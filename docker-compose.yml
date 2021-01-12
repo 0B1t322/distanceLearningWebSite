@@ -1,34 +1,35 @@
 version: "3.3"
 
 services:
-  service.auth.db:
+  db:
     image: mysql
-    container_name: service.auth.db
+    container_name: db
     restart: always
     ports: 
       - 3306:3306
-    environment: 
-      MYSQL_DATABASE: auth
+    volumes:
+      - "./db/scripts/auth.sql:/docker-entrypoint-initdb.d/1.sql"
+    environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: docker
       MYSQL_PASSWORD: docker
     networks: 
-      - authnet
+      - database
 
   service.auth:
     container_name: service.auth
     build: service.auth/
     command: 
-      "./main -dbUser=docker -dbPassword=docker \
-      -network=service.auth.db:3306 -dbName=auth \ 
+      "./main -dbUser=root -dbPassword=root \
+      -network=db:3306 -dbName=auth \ 
       -port=5050 -sk=triangleIsBestFigure"
     ports: 
       - 5050:5050
     depends_on:
-      - service.auth.db
+      - db
     networks: 
-      - authnet
+      - database
     
 networks: 
-  authnet:
+  database:
     driver: "bridge"

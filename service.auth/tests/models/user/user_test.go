@@ -1,14 +1,15 @@
 package user_test
 
 import (
+	"fmt"
 	"testing"
 
-	"github.com/0B1t322/auth-service/db"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"github.com/0B1t322/auth-service/models/user"
 )
 
 func TestFUNC_AddUser(t *testing.T) {
-	db.Init(false)
+	db.Init()
 	err := user.NewUser("dandemin", "123", "user").AddUser()
 	if err != nil {
 		t.Log(err)
@@ -30,7 +31,7 @@ func TestFUNC_AddUser(t *testing.T) {
 }
 
 func TestFUNC_GetUserByID(t *testing.T) {
-	db.Init(true)
+	db.Init()
 	_, err := user.GetUserByID("-1")
 
 	if err != user.ErrUserNotFound {
@@ -43,10 +44,16 @@ func TestFUNC_GetUserByID(t *testing.T) {
 		t.Fail()
 	}
 
-	u, err := user.GetUserByID("1")
+	_u, err := user.GetUserByUserName("dandemin")
+	if  err  != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	u, err := user.GetUserByID(fmt.Sprint(_u.ID))
 	if err != nil {
 		t.Log(err)
-		t.Fail()
+		t.FailNow()
 	}
 
 	t.Log(u)
@@ -54,7 +61,7 @@ func TestFUNC_GetUserByID(t *testing.T) {
 }
 
 func TestFUNC_GetUserByUserName(t *testing.T) {
-	db.Init(false)
+	db.Init()
 
 	_, err := user.GetUserByUserName("dandemin")
 	if err != user.ErrUserNotFound {
@@ -82,7 +89,7 @@ func TestFUNC_GetUserByUserName(t *testing.T) {
 }
 
 func TestFunc_deleteUser(t *testing.T) {
-	db.Init(false)
+	db.Init()
 	u := user.NewUser("dandemin", "123", "admin")
 
 	err := u.AddUser()

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/0B1t322/auth-service/db"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"github.com/0B1t322/auth-service/models/user"
 
 	"google.golang.org/grpc/metadata"
@@ -16,7 +16,7 @@ import (
 )
 
 func TestFunc_SignIn(t *testing.T) {
-	db.Init(false)
+	db.Init()
 	u := user.NewUser("dandem", "123", "admin")
 
 	c, err := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -52,7 +52,7 @@ func TestFunc_SignIn(t *testing.T) {
 }
 
 func TestFunc_SignUp(t *testing.T) {
-	db.Init(false)
+	db.Init()
 	u := user.NewUser("dandem", "123", "admin")
 
 	c, err := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -91,4 +91,10 @@ func TestFunc_SignUp(t *testing.T) {
 	}
 
 	t.Log(res)
+
+	err = u.DeleteUser()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
 }

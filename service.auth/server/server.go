@@ -119,6 +119,7 @@ func (s *Server) SignIn(
 			).Error(),
 		}, err
 	}
+	
 	token, err := s.authManager.CreateToken(u)
 	if err != nil {
 		log.Error(err)

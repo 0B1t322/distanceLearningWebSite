@@ -129,5 +129,5 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "pb/auth_service.proto",
+	Metadata: "authservice/auth_service.proto",
 }

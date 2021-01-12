@@ -2,6 +2,10 @@ module github.com/0B1t322/auth-service
 
 go 1.15
 
+replace (
+	github.com/0B1t322/distanceLearningWebSite/pkg/db => ../pkg/db
+)
+
 require (
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/go-kit/kit v0.10.0 // indirect
@@ -18,4 +22,6 @@ require (
 	google.golang.org/protobuf v1.25.0
 	gorm.io/driver/mysql v1.0.3
 	gorm.io/gorm v1.20.9
+	github.com/0B1t322/distanceLearningWebSite/pkg/db v1.0.0
 )
+
