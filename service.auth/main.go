@@ -32,7 +32,9 @@ func main() {
 		log.Panicln(err)
 	}
 
-	opts := []grpc.ServerOption{}
+	opts := []grpc.ServerOption{
+		grpc.UnaryInterceptor(server.ErrorHandlerInteceptor),
+	}
 
 	grpcServer := grpc.NewServer(opts...)
 	pb.RegisterAuthServiceServer(
