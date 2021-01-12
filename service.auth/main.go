@@ -4,6 +4,7 @@ import (
 	"time"
 	"github.com/0B1t322/auth-service/pkg/auth"
 	"github.com/0B1t322/auth-service/server"
+	"github.com/0B1t322/auth-service/middleware"
 	pb "github.com/0B1t322/auth-service/authservice"
 	"flag"
 	"fmt"
@@ -33,7 +34,7 @@ func main() {
 	}
 
 	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(server.ErrorHandlerInteceptor),
+		grpc.UnaryInterceptor(middleware.ErrorHandlerInteceptor),
 	}
 
 	grpcServer := grpc.NewServer(opts...)

@@ -2,7 +2,7 @@ module github.com/0B1t322/auth-service
 
 go 1.15
 
-// replace github.com/0B1t322/distanceLearningWebSite/pkg/db => ../pkg/db
+replace github.com/0B1t322/distanceLearningWebSite/pkg/db => ../pkg/db
 
 require (
 	github.com/0B1t322/distanceLearningWebSite/pkg/db v0.0.0

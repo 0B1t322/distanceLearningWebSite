@@ -24,7 +24,7 @@ func TestFunc_GetJWT(t *testing.T) {
 		t.FailNow()
 	}
 
-	authManaget := auth.NewAuthManager([]byte("secket_key"), "123", 5*time.Second)
+	authManaget := auth.NewAuthManager([]byte("secket_key"), "123", 1*time.Second)
 
 	token, err := authManaget.CreateToken(u)
 	if err != nil {
@@ -44,7 +44,7 @@ func TestFunc_GetJWT(t *testing.T) {
 
 	t.Log(info.GetUsername(), info.GetRole())
 
-	timer := time.NewTimer(5*time.Second)
+	timer := time.NewTimer(1*time.Second)
 	<-timer.C
 
 	info, err = auth.ParseToken(token, []byte("secket_key") )
