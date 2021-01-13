@@ -137,6 +137,29 @@ func (s *Server) SignIn(
 	}, nil
 }
 
+func (s *Server) Check(
+	ctx context.Context, 
+	req *pb.Token,
+) (*pb.TokenInfo , error) {
+	tokenInfo, err := s.authManager.ParseToken(req.Token)
+	if err != nil {
+		return &pb.TokenInfo{
+			Error: status.Error(
+				codes.Internal,
+				"Internal",
+			).Error(),
+		}, err
+	}
+	// TODO сделать через преобразование информазии в json структру и обратно в новую
+	return s.unmarshallTokenInfo(tokenInfo), nil
+}
+
+func (s *Server) unmarshallTokenInfo(tokenInfo auth.TokenInfo) *pb.TokenInfo {
+	return &pb.TokenInfo{
+		Username: tokenInfo.GetUsername(),
+	}
+}
+
 func (s *Server) checkUserInDBAndGet(
 	username string,
 	password string,

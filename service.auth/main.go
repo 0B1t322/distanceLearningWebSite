@@ -4,7 +4,6 @@ import (
 	"time"
 	"github.com/0B1t322/service.auth/pkg/auth"
 	"github.com/0B1t322/service.auth/server"
-	"github.com/0B1t322/service.auth/middleware"
 	pb "github.com/0B1t322/service.auth/authservice"
 	"flag"
 	"fmt"
@@ -35,7 +34,6 @@ func main() {
 	}
 
 	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(middleware.ErrorHandlerInteceptor),
 	}
 
 	grpcServer := grpc.NewServer(opts...)
@@ -54,6 +52,8 @@ func main() {
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Panicf("failed to start server: %v",err)
 	}
+
+
 
 }
 

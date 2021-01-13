@@ -113,3 +113,5 @@ func (u *User) DeleteUser() error {
 
 	return nil
 }
+
+// TODO преобразовывать модель к виду для pb

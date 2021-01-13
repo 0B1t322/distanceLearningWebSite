@@ -51,6 +51,10 @@ func (am *AuthManager) CreateToken(u *user.User) (string, error) {
 	return token.SignedString(am.signingKey)
 }
 
+func (am *AuthManager) ParseToken(token string) (TokenInfo, error) {
+	return ParseToken(token, am.signingKey)
+}
+
 func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
 	token, err := jwt.ParseWithClaims(
 		accessToken, &AuthClaims{}, 
