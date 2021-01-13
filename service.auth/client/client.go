@@ -3,7 +3,7 @@ package client
 import (
 	"io"
 
-	pb "github.com/0B1t322/auth-service/authservice"
+	pb "github.com/0B1t322/service.auth/authservice"
 	"google.golang.org/grpc"
 )
 

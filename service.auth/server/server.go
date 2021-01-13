@@ -7,12 +7,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/0B1t322/auth-service/models/user"
+	"github.com/0B1t322/service.auth/models/user"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/0B1t322/auth-service/authservice"
-	"github.com/0B1t322/auth-service/pkg/auth"
+	pb "github.com/0B1t322/service.auth/authservice"
+	"github.com/0B1t322/service.auth/pkg/auth"
 )
 
 // Server is auth microservice struct

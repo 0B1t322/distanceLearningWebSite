@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
-	"github.com/0B1t322/auth-service/models/user"
+	"github.com/0B1t322/service.auth/models/user"
 )
 
 func TestFUNC_AddUser(t *testing.T) {

@@ -2,6 +2,8 @@ module github.com/0B1t322/distanceLearningWebSite
 
 go 1.15
 
+replace (
+)
 
 require (
 	github.com/go-sql-driver/mysql v1.5.0

@@ -2,10 +2,10 @@ package main
 
 import (
 	"time"
-	"github.com/0B1t322/auth-service/pkg/auth"
-	"github.com/0B1t322/auth-service/server"
-	"github.com/0B1t322/auth-service/middleware"
-	pb "github.com/0B1t322/auth-service/authservice"
+	"github.com/0B1t322/service.auth/pkg/auth"
+	"github.com/0B1t322/service.auth/server"
+	"github.com/0B1t322/service.auth/middleware"
+	pb "github.com/0B1t322/service.auth/authservice"
 	"flag"
 	"fmt"
 	"net"
@@ -22,10 +22,11 @@ var (
 	secretKey	= flag.String("sk", "my_secret_key", "secret key - need to hash JWT token")
 )
 
+
 func main() {
 	// db.Init() alredy parse flags so we don't need to write this again
 	db.Init()
-	log.Info("db init all is okay!")
+	log.Info("db init all is okay!!")
 
 	
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))

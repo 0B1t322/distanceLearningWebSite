@@ -4,14 +4,14 @@ import (
 	"context"
 	"testing"
 
-	"github.com/0B1t322/auth-service/models/user"
+	"github.com/0B1t322/service.auth/models/user"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 
 	"google.golang.org/grpc/metadata"
 
-	pb "github.com/0B1t322/auth-service/authservice"
+	pb "github.com/0B1t322/service.auth/authservice"
 
-	"github.com/0B1t322/auth-service/client"
+	"github.com/0B1t322/service.auth/client"
 	"google.golang.org/grpc"
 )
 

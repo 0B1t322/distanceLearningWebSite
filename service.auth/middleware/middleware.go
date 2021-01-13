@@ -3,11 +3,12 @@ package middleware
 import (
 	"strings"
 	"google.golang.org/grpc/metadata"
-	"github.com/0B1t322/auth-service/pkg/auth"
+	"github.com/0B1t322/service.auth/pkg/auth"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"context"
 )
+
 
 func ErrorHandlerInteceptor(
 	ctx context.Context, 
