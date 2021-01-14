@@ -65,7 +65,7 @@ func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
 
 			return signingKey, nil
 	},)
-
+	
 	if err != nil {
 		return nil, err
 	}

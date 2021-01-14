@@ -1,6 +1,7 @@
 package auth_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -51,6 +52,8 @@ func TestFunc_GetJWT(t *testing.T) {
 	if err == nil {
 		t.Fail()
 	}
+	t.Log(err)
+	t.Log(errors.Unwrap(err))
 
 	u.DeleteUser()
 }
