@@ -1,5 +1,7 @@
 CREATE DATABASE IF NOT EXISTS auth;
 USE auth;
+-- maybe table tokens don't need
+-- think about delete them
 CREATE TABLE IF NOT EXISTS tokens (
     user_id       INT,
     token         TEXT,
