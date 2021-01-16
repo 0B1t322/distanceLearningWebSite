@@ -6,7 +6,6 @@ build_for_docker:
 
 update:
 	go get -u
-	go mod vendor
 
 proto: update
 	export PATH="$PATH:$(go env GOPATH)/bin" 

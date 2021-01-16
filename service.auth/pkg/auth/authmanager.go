@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"strings"
 	"fmt"
 	"time"
 
@@ -65,8 +66,12 @@ func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
 
 			return signingKey, nil
 	},)
-	
+
 	if err != nil {
+		if checkExpired(err) {
+			return nil, ErrTokenExpire
+		}
+		
 		return nil, err
 	}
 
@@ -75,4 +80,12 @@ func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
 	}
 
 	return nil, ErrInvalidToken
-} 
+}
+
+func checkExpired(err error) bool {
+	if strings.Contains(err.Error(), ErrTokenExpire.Error()) {
+		return true
+	}
+
+	return false
+}
