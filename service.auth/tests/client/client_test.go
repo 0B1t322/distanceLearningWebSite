@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/0B1t322/service.auth/models/user"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 
 	"google.golang.org/grpc/metadata"

@@ -7,7 +7,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/0B1t322/service.auth/models/user"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -36,7 +36,7 @@ func NewServer(authManager *auth.AuthManager) *Server {
 
 }
 // SignUp check if user not exsist
-// if not - create them and give token
+// if not - give error: ErrIncorrectUserNamePass
 func (s *Server) SignUp(
 	ctx context.Context, 
 	req *pb.AuthRequest,
@@ -76,6 +76,10 @@ func (s *Server) SignUp(
 	}, nil
 }
 
+/*
+SignIn create a user if they not exsist
+	require: a role in ctx with key "role"
+*/
 func (s *Server) SignIn(
 	ctx context.Context,
 	req *pb.AuthRequest,
@@ -137,6 +141,9 @@ func (s *Server) SignIn(
 	}, nil
 }
 
+/*
+Check - check token 
+*/
 func (s *Server) Check(
 	ctx context.Context, 
 	req *pb.Token,

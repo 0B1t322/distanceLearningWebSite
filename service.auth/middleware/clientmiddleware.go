@@ -9,7 +9,7 @@ import (
 
 /* 
 TokenUnaryClientInterceptor return UnaryClientInterceptor
-	put token into context with grpc metadata
+	put token into context with key "token" with grpc metadata
 	params:
 		token - access JWT token
 */

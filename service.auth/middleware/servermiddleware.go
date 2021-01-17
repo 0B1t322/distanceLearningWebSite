@@ -32,6 +32,7 @@ func ErrorHandlerInteceptor(
 /* 
 CheckAuthUnaryServerInterceptor return a UnaryServerInterceptor
 	require a client interceptor: TokenUnaryInterceptor
+	token in ctx with key "token"
 	params:
 		netwotk - adress to grpc auth server
 		port 	- port to grpc auth server
