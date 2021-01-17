@@ -5,7 +5,7 @@ import (
 )
 
 /*
-Marshall - set's the same json fields of obj
+Marshall - set's the same json fields of obj 
 */
 func Marshall(from interface{}, to interface{}) error {
 	data, err := json.Marshal(from)
