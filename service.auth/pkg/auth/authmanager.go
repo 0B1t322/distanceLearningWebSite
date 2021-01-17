@@ -1,10 +1,11 @@
 package auth
 
 import (
+	"strings"
 	"fmt"
 	"time"
 
-	"github.com/0B1t322/auth-service/models/user"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
 	"github.com/dgrijalva/jwt-go/v4"
 )
 
@@ -12,9 +13,20 @@ type TokenParser interface {
 	ParseToken(accessToken string, signingKey []byte) (TokenInfo, error)
 }
 
+/*
+AuthManager manage authentication
+can create tokens and parse them
+
+	methods:
+		CreateToken
+		ParseToken
+*/
 type AuthManager struct {
+	// secret key  for hash tokens
 	signingKey 		[]byte
+	// some  hash salt but know not use
 	hashSalt 		string
+	// duration for tokens
 	expireDuration	time.Duration
 }
 
@@ -35,7 +47,11 @@ func NewAuthManager(
 	}
 }
 
-// CreateToken ......
+/*
+CreateToken create a JWT token with information about user - username and role
+	params:
+		user - a model of user
+*/
 func (am *AuthManager) CreateToken(u *user.User) (string, error) {
 	token := jwt.NewWithClaims(
 		jwt.SigningMethodHS256, 
@@ -51,6 +67,21 @@ func (am *AuthManager) CreateToken(u *user.User) (string, error) {
 	return token.SignedString(am.signingKey)
 }
 
+/*
+ParseToken parse a token and give information about user with interface TokenInfo
+	params:
+		token - JWT  token
+*/
+func (am *AuthManager) ParseToken(token string) (TokenInfo, error) {
+	return ParseToken(token, am.signingKey)
+}
+
+/*
+ParseToken parse a token and give information about user with interface TokenInfo
+	params:
+		accessToken - JWT token
+		signingKey - a secretKey that hash token
+*/
 func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
 	token, err := jwt.ParseWithClaims(
 		accessToken, &AuthClaims{}, 
@@ -63,6 +94,10 @@ func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
 	},)
 
 	if err != nil {
+		if checkExpired(err) {
+			return nil, ErrTokenExpire
+		}
+
 		return nil, err
 	}
 
@@ -71,4 +106,12 @@ func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
 	}
 
 	return nil, ErrInvalidToken
-} 
+}
+
+func checkExpired(err error) bool {
+	if strings.Contains(err.Error(), ErrTokenExpire.Error()) {
+		return true
+	}
+
+	return false
+}

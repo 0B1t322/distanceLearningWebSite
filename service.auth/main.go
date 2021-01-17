@@ -2,13 +2,12 @@ package main
 
 import (
 	"time"
-	"github.com/0B1t322/auth-service/pkg/auth"
-	"github.com/0B1t322/auth-service/server"
-	pb "github.com/0B1t322/auth-service/authservice"
+	"github.com/0B1t322/service.auth/pkg/auth"
+	"github.com/0B1t322/service.auth/server"
+	pb "github.com/0B1t322/service.auth/authservice"
 	"flag"
 	"fmt"
 	"net"
-
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	
 
@@ -21,10 +20,11 @@ var (
 	secretKey	= flag.String("sk", "my_secret_key", "secret key - need to hash JWT token")
 )
 
+
 func main() {
 	// db.Init() alredy parse flags so we don't need to write this again
 	db.Init()
-	log.Info("db init all is okay!")
+	log.Info("db init all is okay!!")
 
 	
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
@@ -33,7 +33,6 @@ func main() {
 	}
 
 	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(server.ErrorHandlerInteceptor),
 	}
 
 	grpcServer := grpc.NewServer(opts...)
@@ -52,6 +51,8 @@ func main() {
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Panicf("failed to start server: %v",err)
 	}
+
+	
 
 }
 

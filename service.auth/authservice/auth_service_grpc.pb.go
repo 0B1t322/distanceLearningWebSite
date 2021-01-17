@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AuthServiceClient interface {
 	SignIn(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	SignUp(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	Check(ctx context.Context, in *Token, opts ...grpc.CallOption) (*TokenInfo, error)
 }
 
 type authServiceClient struct {
@@ -47,12 +48,22 @@ func (c *authServiceClient) SignUp(ctx context.Context, in *AuthRequest, opts ..
 	return out, nil
 }
 
+func (c *authServiceClient) Check(ctx context.Context, in *Token, opts ...grpc.CallOption) (*TokenInfo, error) {
+	out := new(TokenInfo)
+	err := c.cc.Invoke(ctx, "/authservice.AuthService/Check", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
 type AuthServiceServer interface {
 	SignIn(context.Context, *AuthRequest) (*AuthResponse, error)
 	SignUp(context.Context, *AuthRequest) (*AuthResponse, error)
+	Check(context.Context, *Token) (*TokenInfo, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -65,6 +76,9 @@ func (UnimplementedAuthServiceServer) SignIn(context.Context, *AuthRequest) (*Au
 }
 func (UnimplementedAuthServiceServer) SignUp(context.Context, *AuthRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
+}
+func (UnimplementedAuthServiceServer) Check(context.Context, *Token) (*TokenInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Check not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -115,6 +129,24 @@ func _AuthService_SignUp_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_Check_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Token)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Check(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/authservice.AuthService/Check",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Check(ctx, req.(*Token))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AuthService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "authservice.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
@@ -126,6 +158,10 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SignUp",
 			Handler:    _AuthService_SignUp_Handler,
+		},
+		{
+			MethodName: "Check",
+			Handler:    _AuthService_Check_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

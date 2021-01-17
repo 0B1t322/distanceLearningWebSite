@@ -7,12 +7,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/0B1t322/auth-service/models/user"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/0B1t322/auth-service/authservice"
-	"github.com/0B1t322/auth-service/pkg/auth"
+	pb "github.com/0B1t322/service.auth/authservice"
+	"github.com/0B1t322/service.auth/pkg/auth"
 )
 
 // Server is auth microservice struct
@@ -36,7 +36,7 @@ func NewServer(authManager *auth.AuthManager) *Server {
 
 }
 // SignUp check if user not exsist
-// if not - create them and give token
+// if not - give error: ErrIncorrectUserNamePass
 func (s *Server) SignUp(
 	ctx context.Context, 
 	req *pb.AuthRequest,
@@ -76,6 +76,10 @@ func (s *Server) SignUp(
 	}, nil
 }
 
+/*
+SignIn create a user if they not exsist
+	require: a role in ctx with key "role"
+*/
 func (s *Server) SignIn(
 	ctx context.Context,
 	req *pb.AuthRequest,
@@ -135,6 +139,32 @@ func (s *Server) SignIn(
 		Token: token,
 		Error: "",
 	}, nil
+}
+
+/*
+Check - check token 
+*/
+func (s *Server) Check(
+	ctx context.Context, 
+	req *pb.Token,
+) (*pb.TokenInfo , error) {
+	tokenInfo, err := s.authManager.ParseToken(req.Token)
+	if err != nil {
+		return &pb.TokenInfo{
+			Error: status.Error(
+				codes.Internal,
+				"Internal",
+			).Error(),
+		}, err
+	}
+	// TODO сделать через преобразование информазии в json структру и обратно в новую
+	return s.unmarshallTokenInfo(tokenInfo), nil
+}
+
+func (s *Server) unmarshallTokenInfo(tokenInfo auth.TokenInfo) *pb.TokenInfo {
+	return &pb.TokenInfo{
+		Username: tokenInfo.GetUsername(),
+	}
 }
 
 func (s *Server) checkUserInDBAndGet(

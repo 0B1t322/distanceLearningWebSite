@@ -2,9 +2,9 @@ syntax = "proto3";
 package authservice;
 
 service AuthService {
-    rpc SignIn (AuthRequest) returns (AuthResponse);
-    rpc SignUp (AuthRequest) returns (AuthResponse);
-    
+    rpc SignIn  (AuthRequest)   returns (AuthResponse);
+    rpc SignUp  (AuthRequest)   returns (AuthResponse);
+    rpc Check   (Token)         returns (TokenInfo);  
 }
 
 message AuthRequest {
@@ -14,5 +14,14 @@ message AuthRequest {
 
 message AuthResponse {
     string token = 1;
+    string error = 2;
+}
+
+message Token {
+    string token = 1;
+}
+
+message TokenInfo {
+    string username = 1;
     string error = 2;
 }

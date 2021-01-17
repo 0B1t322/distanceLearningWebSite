@@ -1,12 +1,13 @@
 package auth_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
-	"github.com/0B1t322/auth-service/models/user"
-	"github.com/0B1t322/auth-service/pkg/auth"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
+	"github.com/0B1t322/service.auth/pkg/auth"
 )
 
 func TestFunc_GetJWT(t *testing.T) {
@@ -24,7 +25,7 @@ func TestFunc_GetJWT(t *testing.T) {
 		t.FailNow()
 	}
 
-	authManaget := auth.NewAuthManager([]byte("secket_key"), "123", 5*time.Second)
+	authManaget := auth.NewAuthManager([]byte("secket_key"), "123", 1*time.Second)
 
 	token, err := authManaget.CreateToken(u)
 	if err != nil {
@@ -44,13 +45,15 @@ func TestFunc_GetJWT(t *testing.T) {
 
 	t.Log(info.GetUsername(), info.GetRole())
 
-	timer := time.NewTimer(5*time.Second)
+	timer := time.NewTimer(1*time.Second)
 	<-timer.C
 
 	info, err = auth.ParseToken(token, []byte("secket_key") )
 	if err == nil {
 		t.Fail()
 	}
+	t.Log(err)
+	t.Log(errors.Unwrap(err))
 
 	u.DeleteUser()
 }
