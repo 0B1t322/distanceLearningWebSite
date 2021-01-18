@@ -43,7 +43,7 @@ func TestFunc_GetJWT(t *testing.T) {
 		t.FailNow()
 	}
 
-	t.Log(info.GetUsername(), info.GetRole())
+	t.Log(info.GetUsername(), info.GetRole(), info.GetID())
 
 	timer := time.NewTimer(1*time.Second)
 	<-timer.C

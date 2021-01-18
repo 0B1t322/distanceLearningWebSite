@@ -6,8 +6,13 @@ import (
 
 type AuthClaims struct {
 	jwt.StandardClaims
+	UID			string `json:"id"`
 	Username 	string `json:"username"`
 	Role		string `json:"role"`	
+}
+
+func (c *AuthClaims) GetID() string {
+	return c.UID
 }
 
 func (c *AuthClaims) GetUsername() string {
@@ -19,6 +24,7 @@ func (c *AuthClaims) GetRole() string {
 }
 
 type TokenInfo interface {
+	GetID()			string
 	GetUsername() 	string
 	GetRole()		string
 }

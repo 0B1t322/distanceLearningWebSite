@@ -60,6 +60,7 @@ func (am *AuthManager) CreateToken(u *user.User) (string, error) {
 				ExpiresAt: jwt.At(time.Now().Add(am.expireDuration)),
 				IssuedAt: jwt.At(time.Now()),
 			},
+			UID: fmt.Sprint(u.ID),
 			Username: u.Username,
 			Role: u.Role,
 	},)
