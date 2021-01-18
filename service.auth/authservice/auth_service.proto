@@ -22,6 +22,8 @@ message Token {
 }
 
 message TokenInfo {
-    string username = 1;
-    string error = 2;
+    string uid      = 1;
+    string username = 2;
+    string role     = 3;
+    string error    = 4;
 }

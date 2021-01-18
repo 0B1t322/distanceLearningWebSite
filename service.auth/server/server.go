@@ -1,9 +1,11 @@
 package server
 
 import (
-	"google.golang.org/grpc/metadata"
 	"context"
 	"errors"
+
+	"github.com/0B1t322/distanceLearningWebSite/pkg/marshall"
+	"google.golang.org/grpc/metadata"
 
 	log "github.com/sirupsen/logrus"
 
@@ -112,7 +114,7 @@ func (s *Server) SignIn(
 		return &pb.AuthResponse{
 			Token: "",
 			Error: err.Error(),
-		}, nil
+		}, status.Error(codes.AlreadyExists, "user with this username exsist")
 	} else if err != nil {
 		log.Error(err)
 		return &pb.AuthResponse{
@@ -149,22 +151,44 @@ func (s *Server) Check(
 	req *pb.Token,
 ) (*pb.TokenInfo , error) {
 	tokenInfo, err := s.authManager.ParseToken(req.Token)
-	if err != nil {
+	if err == auth.ErrInvalidToken {
+		return &pb.TokenInfo{
+			Error: status.Error(
+				codes.InvalidArgument,
+				"Your token is invalid",
+			).Error(),
+		}, err
+	} else if err == auth.ErrTokenExpire {
+		return &pb.TokenInfo{
+			Error: status.Error(
+				codes.Unauthenticated,
+				err.Error(),
+			).Error(),
+		}, err
+	} else if err != nil {
 		return &pb.TokenInfo{
 			Error: status.Error(
 				codes.Internal,
 				"Internal",
 			).Error(),
-		}, err
+		}, status.Error(
+			codes.Internal,
+			"Internal",
+		)
 	}
 	// TODO сделать через преобразование информазии в json структру и обратно в новую
-	return s.unmarshallTokenInfo(tokenInfo), nil
+	return s.unmarshallTokenInfo(tokenInfo)
 }
 
-func (s *Server) unmarshallTokenInfo(tokenInfo auth.TokenInfo) *pb.TokenInfo {
-	return &pb.TokenInfo{
-		Username: tokenInfo.GetUsername(),
+func (s *Server) unmarshallTokenInfo(tokenInfo *auth.TokenInfo) (*pb.TokenInfo, error) {
+	res := &pb.TokenInfo{}
+	err := marshall.Marshall(tokenInfo, res)
+	if err != nil {
+		log.Errorf("Error on marshalling: %v" ,err)
+		return nil, status.Errorf(codes.Internal, "Internal server err")
 	}
+
+	return res, err
 }
 
 func (s *Server) checkUserInDBAndGet(

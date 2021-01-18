@@ -60,9 +60,11 @@ func (am *AuthManager) CreateToken(u *user.User) (string, error) {
 				ExpiresAt: jwt.At(time.Now().Add(am.expireDuration)),
 				IssuedAt: jwt.At(time.Now()),
 			},
-			UID: fmt.Sprint(u.ID),
-			Username: u.Username,
-			Role: u.Role,
+			TokenInfo: TokenInfo{
+				UID: fmt.Sprint(u.ID),
+				Username: u.Username,
+				Role: u.Role,
+			},
 	},)
 
 	return token.SignedString(am.signingKey)
@@ -73,7 +75,7 @@ ParseToken parse a token and give information about user with interface TokenInf
 	params:
 		token - JWT  token
 */
-func (am *AuthManager) ParseToken(token string) (TokenInfo, error) {
+func (am *AuthManager) ParseToken(token string) (*TokenInfo, error) {
 	return ParseToken(token, am.signingKey)
 }
 
@@ -83,7 +85,7 @@ ParseToken parse a token and give information about user with interface TokenInf
 		accessToken - JWT token
 		signingKey - a secretKey that hash token
 */
-func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
+func ParseToken(accessToken string, signingKey []byte) (*TokenInfo, error) {
 	token, err := jwt.ParseWithClaims(
 		accessToken, &AuthClaims{}, 
 		func(t *jwt.Token) (interface{}, error) {
@@ -103,7 +105,7 @@ func ParseToken(accessToken string, signingKey []byte) (TokenInfo, error) {
 	}
 
 	if claims, ok := token.Claims.(*AuthClaims); ok && token.Valid {
-		return claims, nil
+		return &claims.TokenInfo, nil
 	}
 
 	return nil, ErrInvalidToken
