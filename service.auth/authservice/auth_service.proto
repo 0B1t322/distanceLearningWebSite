@@ -27,3 +27,5 @@ message TokenInfo {
     string role     = 3;
     string error    = 4;
 }
+
+// TODO убрать все ерроры с запросов
