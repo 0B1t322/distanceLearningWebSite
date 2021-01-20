@@ -1,0 +1,64 @@
+<mxfile host="65bd71144e" modified="2021-01-20T22:30:55.756Z" agent="5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.52.1 Chrome/83.0.4103.122 Electron/9.3.5 Safari/537.36" version="13.10.0" etag="v53wr-B80aR_ytQv8jDz" type="embed">
+    <diagram id="j_iRWX0VE0W5cZyGPHJW" name="Page-1">
+        <mxGraphModel dx="765" dy="964" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="&lt;p style=&quot;margin: 0px ; margin-top: 6px ; text-align: center&quot;&gt;&lt;b&gt;tasks&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;p style=&quot;margin: 0px ; margin-left: 8px&quot;&gt;+ id: int primary key&lt;br&gt;+ task_header_id: int&lt;br&gt;+ name: text&lt;br&gt;+ imgURL: text&lt;br&gt;+ contentURL: text&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="160" width="180" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="2">
+                    <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+                        <mxPoint x="-24" y="4" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="&lt;p style=&quot;margin: 0px ; margin-top: 6px ; text-align: center&quot;&gt;&lt;b&gt;task_headers&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;p style=&quot;margin: 0px ; margin-left: 8px&quot;&gt;+ id: int&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-left: 8px&quot;&gt;+ course_id: int&lt;br&gt;+ name: text&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="310" width="180" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="4">
+                    <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+                        <mxPoint x="-24" y="4" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.017;entryY=0.333;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="2" target="4">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="170" y="370" as="sourcePoint"/>
+                        <mxPoint x="330" y="370" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="80" y="220"/>
+                            <mxPoint x="80" y="350"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="8" value="task_header_id" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="7">
+                    <mxGeometry x="-0.4298" relative="1" as="geometry">
+                        <mxPoint x="-10" y="21" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="&lt;p style=&quot;margin: 0px ; margin-top: 6px ; text-align: center&quot;&gt;&lt;b&gt;courses&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;p style=&quot;margin: 0px ; margin-left: 8px&quot;&gt;+ id: int&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-left: 8px&quot;&gt;+ name: text&lt;/p&gt;&lt;p style=&quot;margin: 0px ; margin-left: 8px&quot;&gt;+ imgURL: text&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="460" width="180" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="9">
+                    <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+                        <mxPoint x="-24" y="4" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;exitX=-0.017;exitY=0.442;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="4">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="40" y="360" as="sourcePoint"/>
+                        <mxPoint x="120" y="500" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="80" y="363"/>
+                            <mxPoint x="80" y="500"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="&lt;span style=&quot;font-size: 12px ; text-align: left&quot;&gt;course_id&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="11">
+                    <mxGeometry x="-0.4116" y="-1" relative="1" as="geometry">
+                        <mxPoint y="20.94" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
