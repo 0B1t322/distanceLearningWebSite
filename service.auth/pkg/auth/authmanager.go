@@ -100,6 +100,10 @@ func ParseToken(accessToken string, signingKey []byte) (*TokenInfo, error) {
 		if checkExpired(err) {
 			return nil, ErrTokenExpire
 		}
+		
+		if checkInvalidSignature(err) {
+			return nil, ErrInvalidToken
+		}
 
 		return nil, err
 	}
@@ -111,6 +115,8 @@ func ParseToken(accessToken string, signingKey []byte) (*TokenInfo, error) {
 	return nil, ErrInvalidToken
 }
 
+// Два костыля
+
 func checkExpired(err error) bool {
 	if strings.Contains(err.Error(), ErrTokenExpire.Error()) {
 		return true
@@ -118,3 +124,13 @@ func checkExpired(err error) bool {
 
 	return false
 }
+
+func checkInvalidSignature(err error) bool {
+	if strings.Contains(err.Error(), "token signature is invalid") {
+		return true
+	}
+
+	return false
+}
+
+// TODO переделать  эти костыли

@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"errors"
 
 	"github.com/0B1t322/distanceLearningWebSite/pkg/marshall"
 	"google.golang.org/grpc/metadata"
@@ -37,9 +36,12 @@ func NewServer(authManager *auth.AuthManager) *Server {
 	}
 
 }
-// SignUp check if user not exsist
-// if not - give error: ErrIncorrectUserNamePass
-func (s *Server) SignUp(
+
+/*
+SignIn create a user if they not exsist
+	require: a role in ctx with key "role"
+*/
+func (s *Server) SignIn(
 	ctx context.Context, 
 	req *pb.AuthRequest,
 ) (*pb.AuthResponse, error) {
@@ -48,41 +50,36 @@ func (s *Server) SignUp(
 	if err == ErrIncorrectUserNamePass {
 		return &pb.AuthResponse{
 			Token: "", 
-			Error: ErrIncorrectUserNamePass.Error(),
-		}, nil
+		}, status.Error(codes.Unauthenticated, err.Error())
 	} else if err != nil {
 		log.Error(err)
 		return &pb.AuthResponse{
 			Token: "",
-			Error: status.Error(
-				codes.Internal,
-				"Internal",
-			).Error(),
-		}, err
+		}, status.Error(
+			codes.Internal,
+			err.Error(),
+		)
 	}
 	token, err := s.authManager.CreateToken(u)
 	if err != nil {
 		log.Error(err)
 		return &pb.AuthResponse{
 			Token: "",
-			Error: status.Error(
-				codes.Internal,
-				"Internal",
-			).Error(),
-		}, err
+		}, status.Error(
+			codes.Internal,
+			err.Error(),
+		)
 	}
 
 	return &pb.AuthResponse{
 		Token: token,
-		Error: "",
-	}, nil
+	}, status.Error(codes.OK, "You signup")
 }
 
-/*
-SignIn create a user if they not exsist
-	require: a role in ctx with key "role"
-*/
-func (s *Server) SignIn(
+
+// SignUp check if user not exsist
+// if not - give error: ErrIncorrectUserNamePass
+func (s *Server) SignUp(
 	ctx context.Context,
 	req *pb.AuthRequest,
 ) (*pb.AuthResponse, error) {
@@ -101,11 +98,10 @@ func (s *Server) SignIn(
 		log.Infoln(ctx.Value("role"))
 		return &pb.AuthResponse{
 			Token: "",
-			Error: status.Error(
-				codes.Internal,
-				"Internal",
-			).Error(),
-		}, errors.New("Error of get role from ctx")
+		}, status.Error(
+			codes.Internal,
+			"Error of get role from ctx",
+		)
 	}
 
 	u := user.NewUser(req.Username, req.Password, role)
@@ -113,17 +109,13 @@ func (s *Server) SignIn(
 	if err == user.ErrUserExsist {
 		return &pb.AuthResponse{
 			Token: "",
-			Error: err.Error(),
-		}, status.Error(codes.AlreadyExists, "user with this username exsist")
+		}, status.Error(codes.AlreadyExists, err.Error())
 	} else if err != nil {
 		log.Error(err)
 		return &pb.AuthResponse{
 			Token: "",
-			Error: status.Error(
-				codes.Internal,
-				"Internal",
-			).Error(),
-		}, err
+		},
+		status.Error(codes.Internal, err.Error())
 	}
 	
 	token, err := s.authManager.CreateToken(u)
@@ -131,16 +123,14 @@ func (s *Server) SignIn(
 		log.Error(err)
 		return &pb.AuthResponse{
 			Token: "",
-			Error: status.Error(
-				codes.Internal,
-				"Internal",
-			).Error(),
-		}, err
+		}, status.Error(
+			codes.Internal,
+			err.Error(),
+		)
 	}
 	return &pb.AuthResponse{
 		Token: token,
-		Error: "",
-	}, nil
+	}, status.Error(codes.OK, "You sucsessfully sign in")
 }
 
 /*
@@ -152,28 +142,19 @@ func (s *Server) Check(
 ) (*pb.TokenInfo , error) {
 	tokenInfo, err := s.authManager.ParseToken(req.Token)
 	if err == auth.ErrInvalidToken {
-		return &pb.TokenInfo{
-			Error: status.Error(
-				codes.InvalidArgument,
-				"Your token is invalid",
-			).Error(),
-		}, err
+		return nil, status.Error(
+			codes.InvalidArgument,
+			err.Error(),
+		)
 	} else if err == auth.ErrTokenExpire {
-		return &pb.TokenInfo{
-			Error: status.Error(
-				codes.Unauthenticated,
-				err.Error(),
-			).Error(),
-		}, err
+		return nil, status.Error(
+			codes.Unauthenticated,
+			err.Error(),
+		)
 	} else if err != nil {
-		return &pb.TokenInfo{
-			Error: status.Error(
-				codes.Internal,
-				"Internal",
-			).Error(),
-		}, status.Error(
+		return nil, status.Error(
 			codes.Internal,
-			"Internal",
+			err.Error(),
 		)
 	}
 	// TODO сделать через преобразование информазии в json структру и обратно в новую
