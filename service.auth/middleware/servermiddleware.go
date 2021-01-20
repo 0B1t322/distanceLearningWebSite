@@ -33,6 +33,7 @@ func ErrorHandlerInteceptor(
 CheckAuthUnaryServerInterceptor return a UnaryServerInterceptor
 	require a client interceptor: TokenUnaryInterceptor
 	token in ctx with key "token"
+	launch handler with metadata with keys: "uid", "username", "role"
 	params:
 		netwotk - adress to grpc auth server
 		port 	- port to grpc auth server
@@ -70,7 +71,7 @@ func CheckAuthUnaryServerInterceptor(
 				token = ""
 			}
 		
-			_, err = c.Check(ctx, &pb.Token{Token: token})
+			tokenInfo, err := c.Check(ctx, &pb.Token{Token: token})
 			if err == auth.ErrInvalidToken {
 				return nil, grpc.Errorf(codes.Unauthenticated, "%v", err)
 			} else if err == auth.ErrTokenExpire {
@@ -79,6 +80,16 @@ func CheckAuthUnaryServerInterceptor(
 				log.Warn(err)
 				return nil, grpc.Errorf(codes.Internal, "interal server error")
 			}
+			log.Info("tokenInfo: ", tokenInfo)
+			ctx = metadata.NewIncomingContext(
+				ctx, 
+				metadata.Pairs(
+					"uid", 		tokenInfo.Uid,
+					"username", tokenInfo.Username,
+					"role", 	tokenInfo.Role,	
+				),
+			)
+
 			return handler(ctx, req)
 		
 		}
