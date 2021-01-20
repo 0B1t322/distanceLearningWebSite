@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+message Task {
+    string id           = 1;
+    string name         = 2;
+    string imgURL       = 3;
+    string contentURL   = 4;
+    // TODO подумать о юрл контенте
+}
+
+message TaskHeader {
+    string          id      =   1;
+    string          name    =   2;
+    repeated Task   tasks   =   3;
+}
+
+message Course {
+    string id       = 1;
+    string name     = 2;
+    string imgURL   = 3;
+    repeated TaskHeader taskHeaders = 4;
+}
+
+service CoursesService {
+    // courses
+    rpc AddCourse           (AddCourseReq)          returns (AddCourseResp);
+    rpc UpdateCourse        (UpdateCourseReq)       returns (UpdateCourseResp);
+    rpc DeleteCourse        (DeleteCourseReq)       returns (DeleteCourseResp);
+    rpc GetCourse           (GetCourseReq)          returns (GetCourseResp);
+    rpc GetAllCourses       (GetAllCoursesReq)      returns (GetAllCoursesResp);
+
+    // TaskHeaders
+    rpc AddTaskHeader       (AddTaskHeaderReq)      returns (AddTaskHeaderResp);
+    rpc UpdateTaskHeader    (UpdateTaskHeaderReq)   returns (UpdateTaskHeaderResp);
+    rpc DeleteTaskHeader    (DeleteTaskHeaderReq)   returns (DeleteTaskHeaderResp);
+
+    // Tasks
+    rpc AddTask             (AddTaskReq)            returns (AddTaskResp);
+    rpc UpdateTask          (UpdateTaskReq)         returns (UpdateTaskResp);
+    rpc DeleteTask          (DeleteTaskReq)         returns (DeleteTaskResp);
+    
+}
+
+// также токен будет передаваться с помощью клиенсктого интерсептора, парситься и из него в контексте передадут UID role и тд
+//  courses  req/resp
+message AddCourseReq {
+    string name =   1;
+}
+
+message AddCourseResp {
+}
+
+message UpdateCourseReq {
+    string id               = 1;
+    Course updatedCourse    = 2;
+}
+
+message UpdateCourseResp {
+
+}
+
+message DeleteCourseReq {
+    string id = 1;
+}
+
+message DeleteCourseResp {
+
+}
+
+message GetCourseReq {
+    string id = 1;
+}
+
+message GetCourseResp {
+    Course course   = 1; 
+}
+
+message GetAllCoursesReq {
+}
+
+message GetAllCoursesResp {
+    repeated Course courses = 1;
+}
+
+// TaskHeaders
+message AddTaskHeaderReq {
+    string courseId = 1;
+    TaskHeader taskHeader = 2;
+}
+
+message AddTaskHeaderResp {
+
+}
+
+message UpdateTaskHeaderReq {
+    string id = 1;
+    TaskHeader taskHeader = 2;
+}
+
+message UpdateTaskHeaderResp {
+
+}
+
+message DeleteTaskHeaderReq {
+    string id = 1;
+}
+
+message DeleteTaskHeaderResp {
+}
+
+message AddTaskReq {
+    string taskHeaderId = 1;
+    Task task = 2;
+}
+
+message AddTaskResp {
+}
+
+message UpdateTaskReq {
+    string id = 1;
+    Task task = 2;
+}
+
+message UpdateTaskResp {
+
+}
+
+message DeleteTaskReq {
+    string id = 1;
+}
+
+message DeleteTaskResp {
+}
