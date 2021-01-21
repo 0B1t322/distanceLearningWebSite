@@ -78,3 +78,5 @@ func GormOpen() (*gorm.DB, error){
 		&gorm.Config{ Logger: logger.Default.LogMode(logger.Silent)},
 	)
 }
+
+// TODO refactor package
