@@ -11,6 +11,14 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+
+// var (
+// 	dbUser 		= flag.String("dbUser", "docker", "need to connect db")
+// 	dbPassword	= flag.String("dbPassword", "docker", "need to connect to db")
+// 	network		= flag.String("network", "service.auth.db:3306", "need to connect db")
+// 	dbName		= flag.String("dbName", "auth", "database name")
+// )
+
 var DBManger *Manager
 
 func init() {
