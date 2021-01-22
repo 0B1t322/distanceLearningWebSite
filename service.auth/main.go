@@ -16,16 +16,14 @@ import (
 )
 
 var (
-	port 		= flag.String("port", ":8080", "start grpc server on this port")
+	port 		= flag.String("port", "5050", "start grpc server on this port")
 	secretKey	= flag.String("sk", "my_secret_key", "secret key - need to hash JWT token")
 )
 
 
 func main() {
 	// db.Init() alredy parse flags so we don't need to write this again
-	db.Init()
-	log.Info("db init all is okay!!")
-
+	flag.Parse()
 	
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
 	if err != nil {
@@ -33,6 +31,12 @@ func main() {
 	}
 
 	opts := []grpc.ServerOption{
+		
+	}
+
+	DB, err := db.DBManger.OpenDataBase("auth")
+	if err != nil {
+		log.Panic(err)
 	}
 
 	grpcServer := grpc.NewServer(opts...)
@@ -44,10 +48,12 @@ func main() {
 				"some_salt",
 				2 * time.Hour,
 			),
+			DB,
 		),
 	)
 
 	log.Infof("Starting grpc server on: %s\n", *port)
+
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Panicf("failed to start server: %v",err)
 	}
