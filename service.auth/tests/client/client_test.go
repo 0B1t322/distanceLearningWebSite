@@ -1,13 +1,17 @@
 package client_test
 
 import (
+	"time"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"context"
+
 	"testing"
+
+	uc "github.com/0B1t322/distanceLearningWebSite/pkg/controllers/user"
 
 	"github.com/0B1t322/service.auth/pkg/auth"
 	"github.com/0B1t322/service.auth/server"
 
-	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
 
 	"google.golang.org/grpc/metadata"
@@ -19,8 +23,19 @@ import (
 	"google.golang.org/grpc"
 )
 
+var (
+	DBManger = db.NewManager(
+		"root",
+		"root",
+		"127.0.0.1:3306",
+		15 * time.Second,
+	)
+)
+
 func TestFunc_SignUp(t *testing.T) {
-	db.Init()
+	DB, _ := DBManger.OpenDataBase("auth")
+	controll := uc.NewUserController(DB)
+
 	u := user.NewUser("dandem", "123", "admin")
 
 	c, err := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -48,7 +63,7 @@ func TestFunc_SignUp(t *testing.T) {
 
 	t.Log(res)
 
-	err = u.DeleteUser()
+	err = controll.DeleteUser(u)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -56,7 +71,9 @@ func TestFunc_SignUp(t *testing.T) {
 }
 
 func  TestFunc_SingUp_UserExsist(t *testing.T) {
-	db.Init()
+	DB, _ := DBManger.OpenDataBase("auth")
+	controll := uc.NewUserController(DB)
+
 	u := user.NewUser("dandem", "123", "admin")
 
 	c, err := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -103,7 +120,7 @@ func  TestFunc_SingUp_UserExsist(t *testing.T) {
 	t.Log("res: ",res)
 	
 
-	err = u.DeleteUser()
+	err = controll.DeleteUser(u)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -111,8 +128,6 @@ func  TestFunc_SingUp_UserExsist(t *testing.T) {
 }
 
 func TestFunc_SignUp_ErrGetRoleFromCTX(t *testing.T) {
-	db.Init()
-
 	u := user.NewUser("dandem", "123", "admin")
 
 	c, err := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -139,7 +154,8 @@ func TestFunc_SignUp_ErrGetRoleFromCTX(t *testing.T) {
 }
 
 func TestFunc_SignIn(t *testing.T) {
-	db.Init()
+	DB, _ := DBManger.OpenDataBase("auth")
+	controll := uc.NewUserController(DB)
 	u := user.NewUser("dandem", "123", "admin")
 
 	c, err := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -179,7 +195,7 @@ func TestFunc_SignIn(t *testing.T) {
 
 	t.Log(res)
 
-	err = u.DeleteUser()
+	err = controll.DeleteUser(u)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -187,7 +203,9 @@ func TestFunc_SignIn(t *testing.T) {
 }
 
 func TestFunc_SingIn_Unauthenticated(t *testing.T) {
-	db.Init()
+	DB, _ := DBManger.OpenDataBase("auth")
+	controll := uc.NewUserController(DB)
+
 	u := user.NewUser("dandem", "123", "admin")
 
 	c, err := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -259,7 +277,7 @@ func TestFunc_SingIn_Unauthenticated(t *testing.T) {
 		t.FailNow()
 	}
 
-	err = u.DeleteUser()
+	err = controll.DeleteUser(u)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -294,7 +312,8 @@ func TestFunc_Interceptor(t *testing.T) {
 */
 
 func TestFunc_Check(t *testing.T) {
-	db.Init()
+	DB, _ := DBManger.OpenDataBase("auth")
+	controll := uc.NewUserController(DB)
 
 	u := user.NewUser("dandemin", "123", "user")
 	c, err  := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -321,11 +340,13 @@ func TestFunc_Check(t *testing.T) {
 	}
 
 	t.Log(tokenInfo)
-	u.DeleteUser()
+
+	controll.DeleteUser(u)
 }
 
 func TestFunc_Check_InvalidArgument(t *testing.T) {
-	db.Init()
+	DB, _ := DBManger.OpenDataBase("auth")
+	controll := uc.NewUserController(DB)
 
 	u := user.NewUser("dandemin", "123", "user")
 	c, err  := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
@@ -363,5 +384,51 @@ func TestFunc_Check_InvalidArgument(t *testing.T) {
 	}
 
 	t.Log(err)
-	u.DeleteUser()
+	controll.DeleteUser(u)
 }
+
+// func TestFunc_ALotOfSignUp(t *testing.T) {
+// 	max := 1000
+// 	var done chan int = make(chan int)
+// 	DB, _ := DBManger.OpenDataBase("auth")
+// 	controll := uc.NewUserController(DB)
+// 	for i := 0; i < max; i++ {
+// 		go func(i int) {
+// 			u := user.NewUser(fmt.Sprintf("dandemin%v", i),"1","user")
+
+// 			c, err := client.NewClient("127.0.0.1", "5050", []grpc.DialOption{ grpc.WithInsecure()})
+// 			if err != nil {
+// 				t.Log(err)
+// 				t.FailNow()
+// 			}
+
+// 			md := metadata.Pairs("role", u.Role)
+// 			ctx := metadata.NewOutgoingContext(context.Background(), md)
+
+// 			_, err = c.SignUp(
+// 				ctx,
+// 				&pb.AuthRequest{
+// 					Username: u.Username,
+// 					Password: u.Password,
+// 				},
+// 			)
+// 			c.Close()
+
+// 			if err != nil {
+// 				t.Log(err)
+// 				t.Fail()
+// 			}
+// 			t.Log(i)
+
+// 			err = controll.DeleteUser(u)
+// 			if err != nil {
+// 				t.Log(err)
+// 				t.FailNow()
+// 			}
+// 			if i == max-1 {
+// 				done <- 1
+// 			}
+// 		}(i)
+// 	}
+// 	<-done
+// }

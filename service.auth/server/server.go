@@ -1,14 +1,16 @@
 package server
 
 import (
+	uc "github.com/0B1t322/distanceLearningWebSite/pkg/controllers/user"
 	"context"
 
 	"github.com/0B1t322/distanceLearningWebSite/pkg/marshall"
 	"google.golang.org/grpc/metadata"
+	"gorm.io/gorm"
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
+	um "github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -18,8 +20,9 @@ import (
 
 // Server is auth microservice struct
 type Server struct {
-	
-	authManager *auth.AuthManager
+	authManager 	*auth.AuthManager
+	authDB			*gorm.DB
+	userController 	*uc.UserController
 
 	// To provide a standart service interfave
 	pb.UnimplementedAuthServiceServer
@@ -30,9 +33,14 @@ type Server struct {
 //		signingKey - key for hashing JWT
 // 		hashSalt - salt for unhash password (now not use)
 // 		expireDuration - duration of JWT token
-func NewServer(authManager *auth.AuthManager) *Server {
+func NewServer(
+	authManager *auth.AuthManager,
+	authDB		*gorm.DB,
+) *Server {
 	return &Server{
 		authManager: authManager,
+		authDB: authDB,
+		userController: uc.NewUserController(authDB),
 	}
 
 }
@@ -71,6 +79,7 @@ func (s *Server) SignIn(
 		)
 	}
 
+	
 	return &pb.AuthResponse{
 		Token: token,
 	}, status.Error(codes.OK, "You signup")
@@ -104,9 +113,9 @@ func (s *Server) SignUp(
 		)
 	}
 
-	u := user.NewUser(req.Username, req.Password, role)
-	err := u.AddUser()
-	if err == user.ErrUserExsist {
+	u := um.NewUser(req.Username, req.Password, role)
+	err := s.userController.AddUser(u)
+	if err == uc.ErrUserExsist {
 		return &pb.AuthResponse{
 			Token: "",
 		}, status.Error(codes.AlreadyExists, err.Error())
@@ -128,6 +137,9 @@ func (s *Server) SignUp(
 			err.Error(),
 		)
 	}
+
+	
+
 	return &pb.AuthResponse{
 		Token: token,
 	}, status.Error(codes.OK, "You sucsessfully sign in")
@@ -157,6 +169,8 @@ func (s *Server) Check(
 			err.Error(),
 		)
 	}
+	
+
 	// TODO сделать через преобразование информазии в json структру и обратно в новую
 	return s.unmarshallTokenInfo(tokenInfo)
 }
@@ -175,9 +189,9 @@ func (s *Server) unmarshallTokenInfo(tokenInfo *auth.TokenInfo) (*pb.TokenInfo, 
 func (s *Server) checkUserInDBAndGet(
 	username string,
 	password string,
-) (*user.User, error) {
-	u, err := user.GetUserByUserName(username)
-	if err == user.ErrUserNotFound {
+) (*um.User, error) {
+	u, err := s.userController.GetUserByUserName(username)
+	if err == uc.ErrUserNotFound {
 		return nil, ErrIncorrectUserNamePass
 	} else if err != nil {
 		return nil, err
@@ -190,5 +204,4 @@ func (s *Server) checkUserInDBAndGet(
 
 	return u, nil
 }
-
 
