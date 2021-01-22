@@ -2,9 +2,10 @@ syntax = "proto3";
 package authservice;
 
 service AuthService {
-    rpc SignIn  (AuthRequest)   returns (AuthResponse);
-    rpc SignUp  (AuthRequest)   returns (AuthResponse);
-    rpc Check   (Token)         returns (TokenInfo);  
+    rpc SignIn      (AuthRequest)   returns (AuthResponse);
+    rpc SignUp      (AuthRequest)   returns (AuthResponse);
+    rpc Check       (Token)         returns (TokenInfo);
+    rpc DeleteUser  (DeleteUserReq) returns (DeleteUserResp);
 }
 
 message AuthRequest {
@@ -28,4 +29,9 @@ message TokenInfo {
     string error    = 4;
 }
 
-// TODO убрать все ерроры с запросов
+message DeleteUserReq {
+    string id = 1;
+}
+
+message DeleteUserResp {
+}

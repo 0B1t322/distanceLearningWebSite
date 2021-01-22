@@ -1,6 +1,7 @@
 package user
 
 import (
+	_ "github.com/sirupsen/logrus"
 	u "github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
 	"gorm.io/gorm"
 )
@@ -47,7 +48,16 @@ func (c *UserController) GetUserByUserName(username string) (*u.User, error) {
 
 // AddUser to database
 func (c *UserController) AddUser(model *u.User) error {
-	// check if user with this username is exsist
+	// // check if user with this username is exsist
+	// defer func() error {
+	// 	sqlDB, err := c.db.DB()
+	// 	if err != nil {
+	// 		log.Warn(err)
+	// 		return err
+	// 	}
+
+	// 	return sqlDB.Close()
+	// }()
 	var user u.User
 	err := c.db.First(&user, "username = ?", model.Username).Error
 	if err == nil {
@@ -65,7 +75,7 @@ func (c *UserController) AddUser(model *u.User) error {
 // DeleteUser from db
 func (c *UserController) DeleteUser(model *u.User) error {
 	// TODO подумать как удалять все же по ID
-	user, err := u.GetUserByUserName(model.Username)
+	user, err := c.GetUserByUserName(model.Username)
 	if err != nil {
 		return err
 	}

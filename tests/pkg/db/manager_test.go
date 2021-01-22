@@ -15,22 +15,15 @@ func TestFunc_NewManager(t *testing.T) {
 	// 	t.FailNow()
 	// }
 	
-	manager, err := db.NewManager("user", "pass","network", time.Second)
-	if err != nil {
-		t.Log(err)
-		t.FailNow()
-	}
+	manager := db.NewManager("user", "pass","network", time.Second)
 
 	t.Log(manager)
 }
 
 func TestFunc_OpenDataBase(t *testing.T) {
-	manager, err := db.NewManager("root", "root","127.0.0.1:3306", time.Second)
-	if err != nil {
-		t.Log(err)
-		t.FailNow()
-	}
-	_, err = manager.OpenDataBase("auth")
+	manager := db.NewManager("root", "root","127.0.0.1:3306", time.Second)
+
+	_, err := manager.OpenDataBase("auth")
 	if err != nil {
 		t.Log(err)
 		t.FailNow()

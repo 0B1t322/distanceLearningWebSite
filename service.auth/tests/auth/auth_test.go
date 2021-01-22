@@ -1,6 +1,7 @@
 package auth_test
 
 import (
+	uc "github.com/0B1t322/distanceLearningWebSite/pkg/controllers/user"
 	"errors"
 	"testing"
 	"time"
@@ -10,16 +11,26 @@ import (
 	"github.com/0B1t322/service.auth/pkg/auth"
 )
 
+var (
+	DBManger = db.NewManager(
+		"root",
+		"root",
+		"127.0.0.1:3306",
+		15 * time.Second,
+	)
+)
+
 func TestFunc_GetJWT(t *testing.T) {
-	db.Init()
+	DB, _ := DBManger.OpenDataBase("auth")
+	controll := uc.NewUserController(DB)
 	
-	err := user.NewUser("dandemin", "1234", "admin").AddUser()
+	err := controll.AddUser(user.NewUser("dandemin", "1234", "admin"))
 	if err != nil {
 		t.Log(err)
 		t.Fail()
 	}
 
-	u, err := user.GetUserByUserName("dandemin")
+	u, err := controll.GetUserByUserName("dandemin")
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -55,5 +66,5 @@ func TestFunc_GetJWT(t *testing.T) {
 	t.Log(err)
 	t.Log(errors.Unwrap(err))
 
-	u.DeleteUser()
+	controll.DeleteUser(u)
 }

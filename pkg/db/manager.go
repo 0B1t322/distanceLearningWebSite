@@ -18,7 +18,7 @@ func init() {
 		"root",
 		"root",
 		"db:3306",
-		15 * time.Second,
+		20 * time.Second,
 	)
 }
 
@@ -31,8 +31,6 @@ type Manager struct {
 	waitTimeConn	time.Duration
 
 	// dbNameList		[]string
-
-
 }
 
 /* 
@@ -96,7 +94,7 @@ func (m *Manager) OpenDataBase(dbName string) (*gorm.DB, error) {
 			mysql.Config{Conn: sqlDB},
 		),
 		&gorm.Config{
-			Logger: logger.Default.LogMode(logger.Error),
+			Logger: logger.Default.LogMode(logger.Silent),
 		},
 	)
 }
