@@ -14,6 +14,7 @@ type Server struct {
 }
 
 // Courses
+
 func (s *Server) AddCourse(
 	ctx context.Context, 
 	req *pb.AddCourseReq,

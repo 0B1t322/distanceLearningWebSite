@@ -58,6 +58,7 @@ func (c *UserController) AddUser(model *u.User) error {
 
 	// 	return sqlDB.Close()
 	// }()
+	
 	var user u.User
 	err := c.db.First(&user, "username = ?", model.Username).Error
 	if err == nil {
