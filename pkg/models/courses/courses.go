@@ -20,7 +20,7 @@ type Course struct {
 	ImgURL			string 	`json:"imgURL"`
 }
 
-type UserInCourse struct {
-	UserID			int64 	`json:"user_id"`
-	CourseID		int64	`json:"course_id"`
+type UsersInCourse struct {
+	UserID			string 	`json:"user_id"`
+	CourseID		string	`json:"course_id"`
 }
