@@ -16,7 +16,12 @@ func New(db *gorm.DB) *CoursesController {
 		db: db,
 	}
 }
-
+/* 
+AddCourse Add Course if course with this name  does'nt exist
+	errors:
+		ErrCourseExsist
+		some gorm internal errors
+*/
 func (c *CoursesController) AddCourse(course *model.Course) error {
 	// check  if course  with this  name exsist
 	var m model.Course
@@ -30,6 +35,12 @@ func (c *CoursesController) AddCourse(course *model.Course) error {
 	return c.db.Create(course).Error
 }
 
+/*
+GetCourseById return a course with this id
+	errors:
+		ErrCourseNotFound
+		some gorm errors
+*/
 func (c *CoursesController) GetCourseById(id string) (*model.Course, error) {
 	course := &model.Course{}
 
@@ -43,6 +54,12 @@ func (c *CoursesController) GetCourseById(id string) (*model.Course, error) {
 	return course, nil
 }
 
+/*
+GetAllCourseForUser  return a slice of pointers  of course model by a user id
+	errors:
+		CourseNotFound
+		some gorm  errors
+*/
 func (c *CoursesController) GetAllCourseForUser(UID string) ([]*model.Course, error) {
 	var (
 		courses 	[]*model.Course
@@ -71,6 +88,13 @@ func (c *CoursesController) GetAllCourseForUser(UID string) ([]*model.Course, er
 	return courses, nil
 }
 
+
+/*
+GetCourseByName  return  a  course by his name
+	errors:
+		ErrCourseNotFound
+		some  gorm  errors
+*/
 func (c *CoursesController) GetCourseByName(name string) (*model.Course,  error) {
 	course := &model.Course{}
 
@@ -84,6 +108,13 @@ func (c *CoursesController) GetCourseByName(name string) (*model.Course,  error)
 	return course, nil
 }
 
+
+/*
+DeleteCourse delete course by a model
+	errors:
+		ErrCourseNotFound
+		some  gorm  errors
+*/
 func (c *CoursesController) DeleteCourse(course *model.Course) (error) {
 	err := c.db.Delete(course, "id = ? or name = ?", course.ID, course.Name).Error
 	if err == gorm.ErrRecordNotFound {
@@ -93,6 +124,13 @@ func (c *CoursesController) DeleteCourse(course *model.Course) (error) {
 	return err
 }
 
+
+/*
+UpdateCourse update exsisted course and taskHeader and tasks in them.
+if you want to update only  courses send nil to others args
+	errors:
+		// TODO check all errors
+*/
 func (c *CoursesController) UpdateCourse(
 	course 		*model.Course,
 	taskHeaders	[]*model.TaskHeader,
@@ -117,6 +155,12 @@ func (c *CoursesController) UpdateCourse(
 
 // TaskHeaders
 
+/*
+AddTaskHeader add task header; if in this course have the task header with same  name will return error
+	errors:
+		ErrTaskHeaderExsist
+		some gorm errors
+*/
 func (c *CoursesController) AddTaskHeader(th *model.TaskHeader) error {
 	var taskHeader model.TaskHeader
 	
@@ -130,6 +174,13 @@ func (c *CoursesController) AddTaskHeader(th *model.TaskHeader) error {
 	return c.db.Create(th).Error
 }
 
+
+/*
+GetTaskHeaderByID retuen a  task header  by id
+	errors:
+		ErrTaskHeaderNotFound
+		some gorm errors
+*/
 func (c *CoursesController) GetTaskHeaderByID(id string) (*model.TaskHeader, error) {
 	th := &model.TaskHeader{}
 
@@ -143,6 +194,12 @@ func (c *CoursesController) GetTaskHeaderByID(id string) (*model.TaskHeader, err
 	return  th, err
 }
 
+/*
+GetAllTaskHeadearsByCourseID return  a  slice  of  task  headers  by course id
+	errors:
+		ErrTaskHeaderNotFound
+		some  gorm errors
+*/
 func (c *CoursesController) GetAllTaskHeadearsByCourseID(
 	id string,
 ) ([]*model.TaskHeader, error) {
@@ -160,6 +217,11 @@ func (c *CoursesController) GetAllTaskHeadearsByCourseID(
 	return ths, nil
 }
 
+/*
+DeleteTaskHeader delete  task header  by a model;
+	errors:
+		ErrTaskHeaderNotFound
+*/
 func (c *CoursesController) DeleteTaskHeader(th *model.TaskHeader) error {
 	err := c.db.Delete(th).Error
 	// If record not found return nil
@@ -171,6 +233,12 @@ func (c *CoursesController) DeleteTaskHeader(th *model.TaskHeader) error {
 	return err
 }
 
+/*
+UpdateTaskHeader update task header
+	errors:
+		some gorm errors
+		// TODO check other errors
+*/
 func (c *CoursesController) UpdateTaskHeader(
 	th *model.TaskHeader, 
 	tasks []*model.Task,
@@ -193,6 +261,15 @@ func (c *CoursesController) UpdateTaskHeader(
 	return nil
 }
 
+// Tasks
+
+
+/*
+AddTask - add task; in one taskheader can't exist two tasks with same names
+	errors:
+		ErrTaskExist
+		some  gorm errors
+*/
 func (c *CoursesController) AddTask(t *model.Task) (error) {
 	var task model.Task
 	
@@ -206,6 +283,12 @@ func (c *CoursesController) AddTask(t *model.Task) (error) {
 	return c.db.Create(t).Error
 }
 
+/*
+GetTaskByID - get task by id
+	errors:
+		ErrTaskNotFound
+		some  gorm errors
+*/
 func (c *CoursesController) GetTaskByID(id string) (*model.Task, error) {
 	t := &model.Task{}
 
@@ -219,6 +302,13 @@ func (c *CoursesController) GetTaskByID(id string) (*model.Task, error) {
 	return t, nil
 }
 
+
+/*
+GetAllTasksByTaskHeaderID return a slice of tasks by  taskheader id
+	errors:
+		ErrTaskNotFound
+		some gorm errors
+*/
 func (c* CoursesController) GetAllTasksByTaskHeaderID(
 	id string,
 ) ([]*model.Task, error) {
@@ -236,6 +326,13 @@ func (c* CoursesController) GetAllTasksByTaskHeaderID(
 	return tasks, nil
 }
 
+
+/*
+DeleteTask delete task
+	errors:
+		TaskNotFound
+		some gorm errors
+*/
 func (c *CoursesController) DeleteTask(t *model.Task) (error) {
 	err := c.db.Delete(t).Error
 	// If record not found return nil
@@ -246,7 +343,11 @@ func (c *CoursesController) DeleteTask(t *model.Task) (error) {
 
 	return err
 }
-
+/*
+UpdateTask update task that exist
+	errors:
+	some  gorm errors
+*/
 func (c *CoursesController) UpdateTask(t *model.Task) (error) {
 	return c.db.Model(t).Updates(t).Error
 }
@@ -264,7 +365,14 @@ func tasksToMap(tasks []*model.Task) map[string][]*model.Task {
 
 	return m
 }
+// UsersInCourses
 
+/*
+AddUserInCourse add user to course by id
+	errors:
+		ErrUserAlreadyInCourse
+		some  gorm errors
+*/
 func (c *CoursesController) AddUserInCourse(uc *model.UsersInCourse) (error) {
 	var userInCourse model.UsersInCourse
 	
@@ -282,6 +390,10 @@ func (c *CoursesController) AddUserInCourse(uc *model.UsersInCourse) (error) {
 	return c.db.Create(uc).Error
 }
 
+/*
+DeleteUserInCourse delete  user  from course by user id and course id
+
+*/
 func (c* CoursesController) DeleteUserInCourse(UID, CID string) (error) {
 	return c.db.Table("users_in_courses").
 				Where("user_id = ? AND course_id = ?", UID, CID).
@@ -291,3 +403,4 @@ func (c* CoursesController) DeleteUserInCourse(UID, CID string) (error) {
 }
 
 // TODO DeleteUserInCourse by model
+// TODO  user  not found

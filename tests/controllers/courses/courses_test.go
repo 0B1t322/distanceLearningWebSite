@@ -561,5 +561,3 @@ func TestFunc_SliceToMap(t *testing.T) {
 		t.Logf("key: %s, val: %v", k, v)
 	}
 }
-
-// TODO test for UserUnCourse
