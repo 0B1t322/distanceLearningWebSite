@@ -136,7 +136,7 @@ func (c *CoursesController) UpdateCourse(
 	taskHeaders	[]*model.TaskHeader,
 	tasks		[]*model.Task,
 ) error {
-	m := tasksToMap(tasks)
+	m := model.TasksToMap(tasks)
 
 	if err := c.db.Model(course).Updates(course).Error; err != nil {
 		return err
@@ -352,19 +352,7 @@ func (c *CoursesController) UpdateTask(t *model.Task) (error) {
 	return c.db.Model(t).Updates(t).Error
 }
 
-func tasksToMap(tasks []*model.Task) map[string][]*model.Task {
-	m := make(map[string][]*model.Task)
 
-	for _, t := range tasks {
-		if len(m[t.TaskHeaderID]) == 0 {
-			m[t.TaskHeaderID] = []*model.Task{}
-		}
-
-		m[t.TaskHeaderID] = append(m[t.TaskHeaderID], t)
-	}
-
-	return m
-}
 // UsersInCourses
 
 /*
@@ -402,5 +390,6 @@ func (c* CoursesController) DeleteUserInCourse(UID, CID string) (error) {
 				).Error
 }
 
+
 // TODO DeleteUserInCourse by model
-// TODO  user  not found
+// TODO  user not found

@@ -24,3 +24,17 @@ type UsersInCourse struct {
 	UserID			string 	`json:"user_id"`
 	CourseID		string	`json:"course_id"`
 }
+
+func TasksToMap(tasks []*Task) map[string][]*Task {
+	m := make(map[string][]*Task)
+
+	for _, t := range tasks {
+		if len(m[t.TaskHeaderID]) == 0 {
+			m[t.TaskHeaderID] = []*Task{}
+		}
+
+		m[t.TaskHeaderID] = append(m[t.TaskHeaderID], t)
+	}
+
+	return m
+}

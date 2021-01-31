@@ -32,6 +32,9 @@ type CoursesServiceClient interface {
 	AddTask(ctx context.Context, in *AddTaskReq, opts ...grpc.CallOption) (*AddTaskResp, error)
 	UpdateTask(ctx context.Context, in *UpdateTaskReq, opts ...grpc.CallOption) (*UpdateTaskResp, error)
 	DeleteTask(ctx context.Context, in *DeleteTaskReq, opts ...grpc.CallOption) (*DeleteTaskResp, error)
+	// UserInCourse
+	AddUserInCourse(ctx context.Context, in *AddUserInCourseReq, opts ...grpc.CallOption) (*AddUserInCourseResp, error)
+	DeleteUserInCourse(ctx context.Context, in *DeleteUserInCourseReq, opts ...grpc.CallOption) (*DeleteUserInCourseResp, error)
 }
 
 type coursesServiceClient struct {
@@ -141,6 +144,24 @@ func (c *coursesServiceClient) DeleteTask(ctx context.Context, in *DeleteTaskReq
 	return out, nil
 }
 
+func (c *coursesServiceClient) AddUserInCourse(ctx context.Context, in *AddUserInCourseReq, opts ...grpc.CallOption) (*AddUserInCourseResp, error) {
+	out := new(AddUserInCourseResp)
+	err := c.cc.Invoke(ctx, "/CoursesService/AddUserInCourse", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coursesServiceClient) DeleteUserInCourse(ctx context.Context, in *DeleteUserInCourseReq, opts ...grpc.CallOption) (*DeleteUserInCourseResp, error) {
+	out := new(DeleteUserInCourseResp)
+	err := c.cc.Invoke(ctx, "/CoursesService/DeleteUserInCourse", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CoursesServiceServer is the server API for CoursesService service.
 // All implementations must embed UnimplementedCoursesServiceServer
 // for forward compatibility
@@ -159,6 +180,9 @@ type CoursesServiceServer interface {
 	AddTask(context.Context, *AddTaskReq) (*AddTaskResp, error)
 	UpdateTask(context.Context, *UpdateTaskReq) (*UpdateTaskResp, error)
 	DeleteTask(context.Context, *DeleteTaskReq) (*DeleteTaskResp, error)
+	// UserInCourse
+	AddUserInCourse(context.Context, *AddUserInCourseReq) (*AddUserInCourseResp, error)
+	DeleteUserInCourse(context.Context, *DeleteUserInCourseReq) (*DeleteUserInCourseResp, error)
 	mustEmbedUnimplementedCoursesServiceServer()
 }
 
@@ -198,6 +222,12 @@ func (UnimplementedCoursesServiceServer) UpdateTask(context.Context, *UpdateTask
 }
 func (UnimplementedCoursesServiceServer) DeleteTask(context.Context, *DeleteTaskReq) (*DeleteTaskResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTask not implemented")
+}
+func (UnimplementedCoursesServiceServer) AddUserInCourse(context.Context, *AddUserInCourseReq) (*AddUserInCourseResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddUserInCourse not implemented")
+}
+func (UnimplementedCoursesServiceServer) DeleteUserInCourse(context.Context, *DeleteUserInCourseReq) (*DeleteUserInCourseResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserInCourse not implemented")
 }
 func (UnimplementedCoursesServiceServer) mustEmbedUnimplementedCoursesServiceServer() {}
 
@@ -410,6 +440,42 @@ func _CoursesService_DeleteTask_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CoursesService_AddUserInCourse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddUserInCourseReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoursesServiceServer).AddUserInCourse(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CoursesService/AddUserInCourse",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoursesServiceServer).AddUserInCourse(ctx, req.(*AddUserInCourseReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CoursesService_DeleteUserInCourse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserInCourseReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoursesServiceServer).DeleteUserInCourse(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CoursesService/DeleteUserInCourse",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoursesServiceServer).DeleteUserInCourse(ctx, req.(*DeleteUserInCourseReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CoursesService_ServiceDesc is the grpc.ServiceDesc for CoursesService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -460,6 +526,14 @@ var CoursesService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteTask",
 			Handler:    _CoursesService_DeleteTask_Handler,
+		},
+		{
+			MethodName: "AddUserInCourse",
+			Handler:    _CoursesService_AddUserInCourse_Handler,
+		},
+		{
+			MethodName: "DeleteUserInCourse",
+			Handler:    _CoursesService_DeleteUserInCourse_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

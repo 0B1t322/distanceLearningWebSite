@@ -38,16 +38,23 @@ service CoursesService {
     rpc AddTask             (AddTaskReq)            returns (AddTaskResp);
     rpc UpdateTask          (UpdateTaskReq)         returns (UpdateTaskResp);
     rpc DeleteTask          (DeleteTaskReq)         returns (DeleteTaskResp);
+
+    // UserInCourse
+    rpc AddUserInCourse     (AddUserInCourseReq)    returns (AddUserInCourseResp);
+    rpc DeleteUserInCourse  (DeleteUserInCourseReq) returns (DeleteUserInCourseResp);
     
 }
 
 // также токен будет передаваться с помощью клиенсктого интерсептора, парситься и из него в контексте передадут UID role и тд
 //  courses  req/resp
 message AddCourseReq {
-    string name =   1;
+    string              name        =   1;
+    string              imgURL      =   2;
+    repeated TaskHeader taskHeaders =   3;
 }
 
 message AddCourseResp {
+    // TODO maybe add id of added course to resp
 }
 
 message UpdateCourseReq {
@@ -130,4 +137,20 @@ message DeleteTaskReq {
 }
 
 message DeleteTaskResp {
+}
+
+message AddUserInCourseReq {
+    string courseID = 1;
+    // userid in metadata
+}
+
+message AddUserInCourseResp {
+}
+
+message DeleteUserInCourseReq {
+    string courseID = 1;
+    // userid in metadata
+}
+
+message DeleteUserInCourseResp{
 }

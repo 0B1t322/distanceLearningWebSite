@@ -353,6 +353,32 @@ func TestFunc_UpdateTask(t *testing.T) {
 	}
 }
 
+func TestFunc_UpdateTask_ThatNotExist(t *testing.T) {
+	db, err := DBManger.OpenDataBase("courses")
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	controller := cc.New(db)
+
+	task := &cm.Task{ID: 2,TaskHeaderID: "1", Name: "task"}
+	// err = controller.AddTask(task)
+	// if err != nil {
+	// 	t.Log(err)
+	// 	t.FailNow()
+	// }
+	// defer controller.DeleteTask(task)
+
+	task.Name = "updated name"
+
+	err = controller.UpdateTask(task)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+}
+
 func TestFunc_UpdateTaskHeader(t *testing.T) {
 	db, err := DBManger.OpenDataBase("courses")
 	if err != nil {
