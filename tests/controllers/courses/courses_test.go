@@ -127,6 +127,54 @@ func TestFunc_DeleteCourseById(t *testing.T) {
 	}
 }
 
+func TestFunc_DeleteCourse_TH_TASKS_INTO_IN(t *testing.T) {
+	db, err := DBManger.OpenDataBase("courses")
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	controller := cc.New(db)
+
+	c := &cm.Course{Name: "course_1", }
+	if err := controller.AddCourse(c); err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	for i := 0; i  <= 10; i++ {
+		th := &cm.TaskHeader{
+				CourseID: fmt.Sprint(c.ID),
+				Name: fmt.Sprintf("task_header_%v",i),
+			}
+
+		if err := controller.AddTaskHeader(th); err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+
+		for j := 0; j <= 2; j++ {
+			task := &cm.Task{
+				Name: fmt.Sprintf("task_%v", j),
+				TaskHeaderID: fmt.Sprint(th.ID),
+			}
+			if err := controller.AddTask(task); err != nil {
+				t.Log(err)
+				t.FailNow()
+			}
+		}
+	}
+
+	if err := controller.DeleteCourse(c);err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	if _, err := controller.GetAllTaskHeadearsByCourseID(fmt.Sprint(c.ID)); err != cc.ErrTaskHeaderNotFound {
+		t.Log(err)
+		t.FailNow()
+	}
+}
+
 func TestFunc_AddTaskHeader_And_Delete(t *testing.T) {
 	db, err := DBManger.OpenDataBase("courses")
 	if err != nil {

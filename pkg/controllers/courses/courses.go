@@ -119,9 +119,24 @@ func (c *CoursesController) DeleteCourse(course *model.Course) (error) {
 	err := c.db.Delete(course, "id = ? or name = ?", course.ID, course.Name).Error
 	if err == gorm.ErrRecordNotFound {
 		return ErrCourseNotFound
+	} else if err != nil {
+		return err
 	}
 
-	return err
+	ths, err := c.GetAllTaskHeadearsByCourseID(fmt.Sprint( course.ID) )
+	if err == ErrTaskHeaderNotFound {
+		return nil
+	} else if err != nil {
+		return err
+	}
+
+	for _, th := range ths {
+		if err := c.DeleteTaskHeader(th); err != nil {
+			return  err
+		}
+	}
+
+	return nil
 }
 
 
@@ -228,9 +243,24 @@ func (c *CoursesController) DeleteTaskHeader(th *model.TaskHeader) error {
 	// idk what i can do for this
 	if err == gorm.ErrRecordNotFound {
 		return ErrTaskHeaderNotFound
+	} else if err != nil {
+		return err
 	}
 
-	return err
+	ts, err := c.GetAllTasksByTaskHeaderID(fmt.Sprint( th.ID))
+	if err == ErrTaskNotFound {
+		return nil
+	} else if err != nil {
+		return err
+	}
+
+	for _, t := range ts {
+		if err := c.DeleteTask(t); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 /*
