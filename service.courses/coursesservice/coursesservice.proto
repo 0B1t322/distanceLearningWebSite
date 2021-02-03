@@ -141,7 +141,7 @@ message DeleteTaskResp {
 
 message AddUserInCourseReq {
     string courseID = 1;
-    // userid in metadata
+    string userID   = 2;
 }
 
 message AddUserInCourseResp {
@@ -149,7 +149,7 @@ message AddUserInCourseResp {
 
 message DeleteUserInCourseReq {
     string courseID = 1;
-    // userid in metadata
+    string userID   = 2;
 }
 
 message DeleteUserInCourseResp{
