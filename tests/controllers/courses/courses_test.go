@@ -445,10 +445,10 @@ func TestFunc_UpdateTaskHeader(t *testing.T) {
 	th.Name = "updated_task_header_1"
 
 	ts := []*cm.Task{
-		&cm.Task{Name: "task_1", TaskHeaderID: "2"},
-		&cm.Task{Name: "task_2", TaskHeaderID: "2"},
-		&cm.Task{Name: "task_3", TaskHeaderID: "2"},
-		&cm.Task{Name: "task_4", TaskHeaderID: "2"},
+		{Name: "task_1", TaskHeaderID: "2"},
+		{Name: "task_2", TaskHeaderID: "2"},
+		{Name: "task_3", TaskHeaderID: "2"},
+		{Name: "task_4", TaskHeaderID: "2"},
 	}
 
 	for i, task := range ts {
@@ -509,12 +509,12 @@ func TestFunc_GetAllTasksByTaskHeaderID(t *testing.T) {
 	controller := cc.New(db)
 
 	tasks := []*cm.Task{
-		&cm.Task{TaskHeaderID: "2", Name: "tasks_1"},
-		&cm.Task{TaskHeaderID: "2", Name: "tasks_2"},
-		&cm.Task{TaskHeaderID: "2", Name: "tasks_3"},
-		&cm.Task{TaskHeaderID: "1", Name: "tasks_4"},
-		&cm.Task{TaskHeaderID: "1", Name: "tasks_5"},
-		&cm.Task{TaskHeaderID: "3", Name: "tasks_6"},
+		{TaskHeaderID: "2", Name: "tasks_1"},
+		{TaskHeaderID: "2", Name: "tasks_2"},
+		{TaskHeaderID: "2", Name: "tasks_3"},
+		{TaskHeaderID: "1", Name: "tasks_4"},
+		{TaskHeaderID: "1", Name: "tasks_5"},
+		{TaskHeaderID: "3", Name: "tasks_6"},
 	}
 
 	for _, task := range tasks {
@@ -613,12 +613,12 @@ func TestFunc_AddUserInCourse(t *testing.T) {
 
 func TestFunc_SliceToMap(t *testing.T) {
 	slice := []*cm.Task{
-		&cm.Task{TaskHeaderID: "2", Name: "tasks_1"},
-		&cm.Task{TaskHeaderID: "2", Name: "tasks_2"},
-		&cm.Task{TaskHeaderID: "2", Name: "tasks_3"},
-		&cm.Task{TaskHeaderID: "1", Name: "tasks_4"},
-		&cm.Task{TaskHeaderID: "1", Name: "tasks_5"},
-		&cm.Task{TaskHeaderID: "3", Name: "tasks_6"},
+		{TaskHeaderID: "2", Name: "tasks_1"},
+		{TaskHeaderID: "2", Name: "tasks_2"},
+		{TaskHeaderID: "2", Name: "tasks_3"},
+		{TaskHeaderID: "1", Name: "tasks_4"},
+		{TaskHeaderID: "1", Name: "tasks_5"},
+		{TaskHeaderID: "3", Name: "tasks_6"},
 	}
 
 	m := make(map[string][]*cm.Task)
