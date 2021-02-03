@@ -21,6 +21,7 @@ import (
 type Server struct {
 	pb.UnimplementedCoursesServiceServer
 
+	// controller that work with db
 	courseController	*cc.CoursesController
 }
 
@@ -32,7 +33,7 @@ func NewServer(
 	}
 }
 
-// Courses
+// Courses -----------------------------
 
 func (s *Server) AddCourse(
 	ctx context.Context, 
@@ -52,10 +53,23 @@ func (s *Server) AddCourse(
 	}
 
 	if len(req.TaskHeaders) == 0 {
-		return nil, status.Error(codes.OK, "All is okey")
+		return &pb.AddCourseResp{}, status.Error(codes.OK, "All is okey")
 	}
 
-	// TODO AddTaskHeader
+	courseID := fmt.Sprint(model.ID)
+	for _, th := range req.TaskHeaders {
+		_, err := s.AddTaskHeader(
+			ctx,
+			&pb.AddTaskHeaderReq{
+				CourseId: courseID,
+				TaskHeader: th,
+			},
+		)
+
+		if err != nil {
+			return nil, err
+		}
+	}
 	return &pb.AddCourseResp{}, status.Error(codes.OK, "OK")
 }
 
@@ -147,7 +161,178 @@ func (s *Server) GetAllCourses(
 	if err == cc.ErrCourseNotFound {
 		return nil, status.Error(codes.NotFound, "Not found courses for this user")
 	}
+
+	// TODO think if need to load some more
+	var cs []*pb.Course
+	for _, c := range courses {
+		cs = append(
+			cs,
+			&pb.Course{
+				Id: fmt.Sprint(c.ID),
+				Name: c.Name,
+				ImgURL: c.ImgURL,
+				TaskHeaders: nil,
+			},
+		)
+	}
+
+	return &pb.GetAllCoursesResp{Courses: cs}, status.Error(codes.OK, "Ok")
+}
+
+// -----------------------------
+
+// TaskHeader -----------------------------
+
+func (s *Server) AddTaskHeader(
+	ctx context.Context,
+	req *pb.AddTaskHeaderReq, 
+)	(*pb.AddTaskHeaderResp, error) {
+	// TODO check for userid and  permission
+	ID, err := strconv.ParseInt(req.TaskHeader.Id, 10, 64)
+	if err !=  nil {
+		return nil,  status.Errorf(codes.InvalidArgument, "Invalid ID, err: %v", err)
+	}
+
+	model := &cm.TaskHeader{ID: ID, CourseID: req.CourseId, Name: req.TaskHeader.Name}
+	if err :=  s.courseController.AddTaskHeader(model); err == cc.ErrTaskHeaderExsist {
+		return nil, status.Errorf(codes.AlreadyExists, "%v", err)
+	} else if err != nil {
+		return nil,  status.Errorf(codes.Internal, "%v", err)
+	}
+
+	//TODO Add Tasks
+
+	return &pb.AddTaskHeaderResp{}, status.Error(codes.OK, "Okay")
+}
+
+func (s *Server) UpdateTaskHeader(
+	ctx context.Context,
+	req *pb.UpdateTaskHeaderReq,
+)	(*pb.UpdateTaskHeaderResp, error) {
 	
+	th, ts, err := convertor.PBTaskHeaderToModel(req.TaskHeader)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	if err := s.courseController.UpdateTaskHeader(th, ts); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.UpdateTaskHeaderResp{}, nil
+}
+
+func (s *Server) DeleteTaskHeader(
+	ctx context.Context,
+	req *pb.DeleteTaskHeaderReq,
+)	(*pb.DeleteTaskHeaderResp, error) {
+	ID, err := strconv.ParseInt(req.Id, 10, 64)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Invalid ID")
+	}
+
+	if err := s.courseController.DeleteTaskHeader(&cm.TaskHeader{ID: ID}); err == cc.ErrTaskHeaderNotFound {
+		return nil, status.Error(codes.NotFound, err.Error())
+	} else if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.DeleteTaskHeaderResp{}, status.Error(codes.OK, "Deleted")
+}
+// -----------------------------
+
+// Tasks -----------------------------
+
+func (s *Server) AddTask(
+	ctx context.Context,
+	req *pb.AddTaskReq,
+)	(*pb.AddTaskResp, error) {
+	model := &cm.Task {
+		Name: req.Task.Name,
+		ImgURL: req.Task.ImgURL,
+		TaskHeaderID: req.TaskHeaderId,
+	}
+
+	if err := s.courseController.AddTask(model); err == cc.ErrTaskExist {
+		return nil, status.Error(codes.AlreadyExists, err.Error())
+	} else if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.AddTaskResp{}, status.Error(codes.OK, "Task Added")
+}
+
+func (s *Server) UpdateTask(
+	ctx context.Context,
+	req *pb.UpdateTaskReq,
+)	(*pb.UpdateTaskResp, error) {
+	ID, err := strconv.ParseInt(req.Id, 10, 64)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Invalid ID")
+	}
+
+	model := &cm.Task{
+		ID: ID,
+		Name: req.Task.Name,
+		ImgURL: req.Task.ImgURL, 
+	}
+
+	if err := s.courseController.UpdateTask(model); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.UpdateTaskResp{},  status.Error(codes.OK, "Task Updated")
+}
+
+func (s *Server) DeleteTask(
+	ctx context.Context,
+	req *pb.DeleteTaskReq,
+)	(*pb.DeleteTaskResp, error) {
+	ID, err := strconv.ParseInt(req.Id, 10, 64)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Invalid ID")
+	}
+
+	if err := s.courseController.DeleteTask(&cm.Task{ID:ID}); err == cc.ErrTaskNotFound {
+		return nil, status.Error(codes.NotFound, err.Error())
+	} else if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.DeleteTaskResp{}, status.Error(codes.OK, "Task deleted")
+}
+
+// -----------------------------
+
+// UserInCourse -----------------------------
+
+func  (s *Server) AddUserInCourse(
+	ctx context.Context,
+	req *pb.AddUserInCourseReq,
+)	(*pb.AddUserInCourseResp, error) {
+	if err := s.courseController.AddUserInCourse(
+		&cm.UsersInCourse{
+			UserID: req.UserID, 
+			CourseID: req.CourseID,
+		},
+	); err == cc.ErrUserAlredyInCourse {
+		return nil, status.Error(codes.AlreadyExists, err.Error())
+	} else if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.AddUserInCourseResp{}, status.Error(codes.OK, "User  added in course")
+}
+
+func (s *Server) DeleteUserInCourse(
+	ctx context.Context,
+	req *pb.DeleteUserInCourseReq,
+)	(*pb.DeleteUserInCourseResp, error ) {
+	if err := s.courseController.DeleteUserInCourse(req.UserID, req.CourseID); err != nil {
+		return nil ,status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.DeleteUserInCourseResp{}, status.Error(codes.OK, "User deleted")
 }
 
 func getRoleFromCtx(ctx context.Context) (string, error) {

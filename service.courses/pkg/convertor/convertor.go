@@ -73,3 +73,40 @@ func PBCourseToCourseModel(course *pb.Course) (*cm.Course, error) {
 
 	return c, nil
 }
+
+func PBTaskHeaderToModel(taskHeader *pb.TaskHeader) (*cm.TaskHeader, []*cm.Task, error) {
+
+	var (
+		th 	*cm.TaskHeader
+		ts	[]*cm.Task
+	)
+
+	ID, err := strconv.ParseInt(taskHeader.Id, 10, 64)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	th = &cm.TaskHeader{
+		ID: ID,
+		Name: taskHeader.Name,
+	}
+
+	for _, t := range taskHeader.Tasks {
+		ID, err := strconv.ParseInt(t.Id, 10, 64)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		ts = append(
+			ts,
+			&cm.Task{
+				ID: ID,
+				Name: t.Name,
+				ImgURL: t.ImgURL,
+				TaskHeaderID: taskHeader.Id,
+			}, 
+		)
+	}
+
+	return th, ts, nil
+}
