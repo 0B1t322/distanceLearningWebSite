@@ -17,7 +17,9 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
-
+// Server a struct of server
+// 
+// contains controller
 type Server struct {
 	pb.UnimplementedCoursesServiceServer
 
@@ -25,6 +27,7 @@ type Server struct {
 	courseController	*cc.CoursesController
 }
 
+// NewServer return a new server
 func NewServer(
 	courseDB *gorm.DB,
 ) *Server {
@@ -35,6 +38,11 @@ func NewServer(
 
 // Courses -----------------------------
 
+/*
+AddCourse add course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) AddCourse(
 	ctx context.Context, 
 	req *pb.AddCourseReq,
@@ -73,6 +81,11 @@ func (s *Server) AddCourse(
 	return &pb.AddCourseResp{}, status.Error(codes.OK, "OK")
 }
 
+/*
+DeleteCourse delete course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) DeleteCourse(
 	ctx context.Context, 
 	req *pb.DeleteCourseReq,
@@ -96,6 +109,10 @@ func (s *Server) DeleteCourse(
 	return &pb.DeleteCourseResp{}, status.Error(codes.OK, "Delete course successfully")
 }
 
+
+/*
+GetCourse return course
+*/
 func (s *Server) GetCourse(
 	ctx context.Context, 
 	req *pb.GetCourseReq,
@@ -132,6 +149,11 @@ func (s *Server) GetCourse(
 	// Check if user in this course or it's teacher or admin
 }
 
+/*
+UpdateCourse update course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) UpdateCourse(
 	ctx context.Context, 
 	req *pb.UpdateCourseReq,
@@ -147,7 +169,11 @@ func (s *Server) UpdateCourse(
 
 	return &pb.UpdateCourseResp{}, status.Error(codes.OK, "Updated")
 }
+/*
+GetAllCourses return all course for user 
 
+UID in metadata
+*/
 func (s *Server) GetAllCourses(
 	ctx context.Context, 
 	req *pb.GetAllCoursesReq,
@@ -183,6 +209,11 @@ func (s *Server) GetAllCourses(
 
 // TaskHeader -----------------------------
 
+/*
+AddTaskHeader add taskHeadewr for course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) AddTaskHeader(
 	ctx context.Context,
 	req *pb.AddTaskHeaderReq, 
@@ -205,6 +236,11 @@ func (s *Server) AddTaskHeader(
 	return &pb.AddTaskHeaderResp{}, status.Error(codes.OK, "Okay")
 }
 
+/*
+UpdateTaskHeader update taskHeadewr for course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) UpdateTaskHeader(
 	ctx context.Context,
 	req *pb.UpdateTaskHeaderReq,
@@ -222,6 +258,11 @@ func (s *Server) UpdateTaskHeader(
 	return &pb.UpdateTaskHeaderResp{}, nil
 }
 
+/*
+DeleteTaskHeader delete taskheader from course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) DeleteTaskHeader(
 	ctx context.Context,
 	req *pb.DeleteTaskHeaderReq,
@@ -243,6 +284,11 @@ func (s *Server) DeleteTaskHeader(
 
 // Tasks -----------------------------
 
+/*
+AddTask add taask in task header
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) AddTask(
 	ctx context.Context,
 	req *pb.AddTaskReq,
@@ -262,6 +308,11 @@ func (s *Server) AddTask(
 	return &pb.AddTaskResp{}, status.Error(codes.OK, "Task Added")
 }
 
+/*
+UpdateTask update task header in course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) UpdateTask(
 	ctx context.Context,
 	req *pb.UpdateTaskReq,
@@ -284,6 +335,11 @@ func (s *Server) UpdateTask(
 	return &pb.UpdateTaskResp{},  status.Error(codes.OK, "Task Updated")
 }
 
+/*
+DeleteTask delete task from task header
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) DeleteTask(
 	ctx context.Context,
 	req *pb.DeleteTaskReq,
@@ -306,6 +362,11 @@ func (s *Server) DeleteTask(
 
 // UserInCourse -----------------------------
 
+/*
+AddUserInCourse add user in course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func  (s *Server) AddUserInCourse(
 	ctx context.Context,
 	req *pb.AddUserInCourseReq,
@@ -324,6 +385,11 @@ func  (s *Server) AddUserInCourse(
 	return &pb.AddUserInCourseResp{}, status.Error(codes.OK, "User  added in course")
 }
 
+/*
+DeleteUserInCourse dleete user in course
+
+To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+*/
 func (s *Server) DeleteUserInCourse(
 	ctx context.Context,
 	req *pb.DeleteUserInCourseReq,
