@@ -29,6 +29,19 @@ services:
       - db
     networks: 
       - database
+
+  service.courses:
+    container_name: service.courses
+    build: service.courses/
+    command: 
+      "./main" \
+      -port=5051 -sk=triangleIsBestFigure"
+    ports: 
+    - 5051:5051
+    depends_on: 
+      - db
+    networks: 
+    - database
     
 networks: 
   database:
