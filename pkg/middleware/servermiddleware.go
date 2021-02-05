@@ -46,6 +46,9 @@ func ErrLoggerStreamInterceptor(l *log.Logger) grpc.StreamServerInterceptor {
 	}
 }
 
+/*
+TokenParsesInterceptor parse token and put token info into metadata
+*/
 func TokenParsesInterceptor(sk string) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context, 
