@@ -3,6 +3,7 @@ module github.com/0B1t322/distanceLearningWebSite
 go 1.15
 
 require (
+	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/sirupsen/logrus v1.7.0

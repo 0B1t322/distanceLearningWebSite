@@ -2,8 +2,9 @@ module github.com/0B1t322/service.courses
 
 go 1.15
 
-replace github.com/0B1t322/distanceLearningWebSite => ../
-
+replace ( 
+    github.com/0B1t322/distanceLearningWebSite => ../
+)
 require (
 	github.com/0B1t322/distanceLearningWebSite v0.0.0
 	github.com/golang/protobuf v1.4.3

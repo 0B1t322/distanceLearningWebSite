@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
 	"context"
 
 	pb "github.com/0B1t322/service.auth/authservice"
 	"github.com/0B1t322/service.auth/client"
-	"github.com/0B1t322/service.auth/pkg/auth"
+	
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
