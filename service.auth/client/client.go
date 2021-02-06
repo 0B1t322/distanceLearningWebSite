@@ -1,47 +1,40 @@
 package client
 
 import (
+	"errors"
 	"io"
+
+	pkg_client "github.com/0B1t322/distanceLearningWebSite/pkg/client"
 
 	pb "github.com/0B1t322/service.auth/authservice"
 	"google.golang.org/grpc"
 )
 
-type authServiceClient interface {
+type Client interface {
+	io.Closer
 	pb.AuthServiceClient
-}
-
-type client struct {
-	authServiceClient
-
-	port 	string
-	network string
-	conn io.Closer
 }
 
 func NewClient(
 	network string,
 	port string, 
 	opts []grpc.DialOption,
-) (*client, error) {
-	c := &client{network: network, port: port}
-	conn, err := c.newConn(opts)
+) (Client, error) {
+	c, conn, err := pkg_client.New(network, port, opts, pb.NewAuthServiceClient)
 	if err != nil {
 		return nil, err
 	}
-	
-	c.conn = conn
-	c.authServiceClient = pb.NewAuthServiceClient(conn)
-	
-	return c, nil
-}
 
-func (c *client) newConn(
-	opts []grpc.DialOption,
-) (*grpc.ClientConn, error) {
-	return grpc.Dial(c.network+":"+c.port, opts...)
-}
+	client, ok := c.(pb.AuthServiceClient)
+	if !ok {
+		return nil, errors.New("Not okay")
+	}
 
-func (c *client) Close() error {
-	return c.conn.Close()
+	return &struct { 
+		pb.AuthServiceClient 
+		io.Closer 
+	} {
+		client,
+		conn,
+	}, nil
 }

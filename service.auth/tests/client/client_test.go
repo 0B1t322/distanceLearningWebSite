@@ -1,6 +1,7 @@
 package client_test
 
 import (
+	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
 	"time"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"context"
@@ -9,7 +10,7 @@ import (
 
 	uc "github.com/0B1t322/distanceLearningWebSite/pkg/controllers/user"
 
-	"github.com/0B1t322/service.auth/pkg/auth"
+	
 	"github.com/0B1t322/service.auth/server"
 
 	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
