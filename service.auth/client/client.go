@@ -30,11 +30,11 @@ func NewClient(
 		return nil, errors.New("Not okay")
 	}
 
-	return &struct { 
-		pb.AuthServiceClient 
-		io.Closer 
-	} {
-		client,
+	return &struct{
+		io.Closer
+		pb.AuthServiceClient
+	}{
 		conn,
+		client,
 	}, nil
 }

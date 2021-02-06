@@ -2,9 +2,13 @@ module github.com/0B1t322/service.courses
 
 go 1.15
 
-replace github.com/0B1t322/distanceLearningWebSite => ../
+replace ( 
+    github.com/0B1t322/distanceLearningWebSite => ../
+    github.com/0B1t322/distanceLearningWebSite/service.auth => ../service.auth 
+)
 
 require (
+    github.com/0B1t322/distanceLearningWebSite/service.auth v0.0.0
 	github.com/0B1t322/distanceLearningWebSite v0.0.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.4 // indirect

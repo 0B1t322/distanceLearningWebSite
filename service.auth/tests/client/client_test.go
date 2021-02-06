@@ -45,7 +45,7 @@ func TestFunc_SignUp(t *testing.T) {
 		t.FailNow()
 	}
 	defer c.Close()
-
+	
 	md := metadata.Pairs("role", u.Role)
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
 
