@@ -18,7 +18,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/0B1t322/service.auth/authservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 
 	"github.com/0B1t322/service.auth/client"
 	"google.golang.org/grpc"

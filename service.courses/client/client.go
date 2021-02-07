@@ -1,12 +1,13 @@
 package client
 
 import (
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/coursesservice"
 	"errors"
 	"io"
 
 	pkg_client "github.com/0B1t322/distanceLearningWebSite/pkg/client"
 
-	pb "github.com/0B1t322/service.courses/coursesservice"
+	
 	"google.golang.org/grpc"
 )
 

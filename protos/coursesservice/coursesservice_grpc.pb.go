@@ -537,5 +537,5 @@ var CoursesService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "coursesservice/coursesservice.proto",
+	Metadata: "protos/coursesservice/coursesservice.proto",
 }

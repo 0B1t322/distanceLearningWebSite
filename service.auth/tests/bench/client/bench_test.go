@@ -4,7 +4,7 @@ import (
 	"time"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"testing"
-	pb "github.com/0B1t322/service.auth/authservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 	"google.golang.org/grpc"
 	"github.com/0B1t322/service.auth/client"
 	"context"

@@ -3,7 +3,7 @@ package main
 import (
 
 	"github.com/0B1t322/service.courses/server"
-	pb "github.com/0B1t322/service.courses/coursesservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/coursesservice"
 	"flag"
 	"fmt"
 	"net"

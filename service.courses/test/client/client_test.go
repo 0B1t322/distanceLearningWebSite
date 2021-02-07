@@ -1,11 +1,12 @@
 package client_test
 
 import (
+	"github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 	"context"
 	"testing"
 
 	grpc_middleware "github.com/0B1t322/distanceLearningWebSite/pkg/middleware"
-	"github.com/0B1t322/distanceLearningWebSite/service.auth/authservice"
+	
 	auth_client "github.com/0B1t322/distanceLearningWebSite/service.auth/client"
 	"github.com/0B1t322/service.courses/client"
 	"google.golang.org/grpc"
@@ -18,6 +19,7 @@ func init() {
 		panic(err)
 	}
 	defer c.Close()
+	
 	
 	authC, _ := c.(authservice.AuthServiceClient)
 	

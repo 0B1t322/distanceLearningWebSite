@@ -6,7 +6,7 @@ import (
 
 	pkg_client "github.com/0B1t322/distanceLearningWebSite/pkg/client"
 
-	pb "github.com/0B1t322/service.auth/authservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 	"google.golang.org/grpc"
 )
 

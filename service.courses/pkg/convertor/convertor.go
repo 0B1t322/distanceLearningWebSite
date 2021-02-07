@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	cm "github.com/0B1t322/distanceLearningWebSite/pkg/models/courses"
-	pb "github.com/0B1t322/service.courses/coursesservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/coursesservice"
 )
 
 // PBCourseToModels  convert pb models to curses model
