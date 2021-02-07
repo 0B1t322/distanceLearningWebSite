@@ -6,7 +6,7 @@ import (
 
 	pkg_client "github.com/0B1t322/distanceLearningWebSite/pkg/client"
 
-	pb "github.com/0B1t322/service.auth/authservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 	"google.golang.org/grpc"
 )
 
@@ -30,11 +30,11 @@ func NewClient(
 		return nil, errors.New("Not okay")
 	}
 
-	return &struct { 
-		pb.AuthServiceClient 
-		io.Closer 
-	} {
-		client,
+	return &struct{
+		io.Closer
+		pb.AuthServiceClient
+	}{
 		conn,
+		client,
 	}, nil
 }

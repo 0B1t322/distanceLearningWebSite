@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/0B1t322/service.auth/server"
-	pb "github.com/0B1t322/service.auth/authservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 	"flag"
 	"fmt"
 	"net"

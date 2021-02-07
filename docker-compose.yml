@@ -34,7 +34,7 @@ services:
     container_name: service.courses
     build: service.courses/
     command: 
-      "./main" \
+      "./main \
       -port=5051 -sk=triangleIsBestFigure"
     ports: 
     - 5051:5051

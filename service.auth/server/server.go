@@ -1,6 +1,8 @@
 package server
 
 import (
+	
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
 	uc "github.com/0B1t322/distanceLearningWebSite/pkg/controllers/user"
 	"context"
@@ -15,7 +17,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/0B1t322/service.auth/authservice"
 
 )
 

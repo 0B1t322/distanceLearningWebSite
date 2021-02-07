@@ -12,7 +12,7 @@ import (
 	cm "github.com/0B1t322/distanceLearningWebSite/pkg/models/courses"
 	"gorm.io/gorm"
 
-	pb "github.com/0B1t322/service.courses/coursesservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/coursesservice"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
