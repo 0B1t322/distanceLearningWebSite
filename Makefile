@@ -14,9 +14,11 @@ proto_coursesservice:
 
 proto: proto_authservice proto_coursesservice
 
-build: build_auth build_courses
+build: build_auth build_courses build_docker_compose
 
 build_auth:
 	cd service.auth && make $(build_cmd)
 build_courses:
 	cd service.courses && make $(build_cmd)
+build_docker_compose:
+	docker-compose build
