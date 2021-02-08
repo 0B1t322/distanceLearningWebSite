@@ -1,6 +1,7 @@
 package convertor
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -60,6 +61,10 @@ func PBCourseToModels(course *pb.Course) (*cm.Course, []*cm.TaskHeader, []*cm.Ta
 }
 
 func PBCourseToCourseModel(course *pb.Course) (*cm.Course, error) {
+	if course == nil {
+		return nil, errors.New("nil pointer")
+	}
+
 	ID, err := strconv.ParseInt(course.Id, 10, 64)
 	if err != nil {
 		return nil, err
