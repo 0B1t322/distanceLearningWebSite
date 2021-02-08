@@ -44,7 +44,7 @@ GetCourseById return a course with this id
 func (c *CoursesController) GetCourseById(id string) (*model.Course, error) {
 	course := &model.Course{}
 
-	err := c.db.Find(course, "id = ?", id).Error
+	err := c.db.First(course, "id = ?", id).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, ErrCourseNotFound
 	} else if err != nil {
@@ -98,7 +98,7 @@ GetCourseByName  return  a  course by his name
 func (c *CoursesController) GetCourseByName(name string) (*model.Course,  error) {
 	course := &model.Course{}
 
-	err := c.db.Find(course, "name = ?", name).Error
+	err := c.db.First(course, "name = ?", name).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, ErrCourseNotFound
 	} else if err != nil {
