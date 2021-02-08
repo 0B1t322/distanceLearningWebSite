@@ -47,10 +47,16 @@ func (s *Server) AddCourse(
 	ctx context.Context, 
 	req *pb.AddCourseReq,
 )	(*pb.AddCourseResp, error) {
-
-	if err := getRoleAndCheckThem(ctx); err != nil {
-		return nil, err
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Error(codes.Internal, "Can't get metadata")
 	}
+
+	log.Infof("%v", md)
+
+	// if err := getRoleAndCheckThem(ctx); err != nil {
+	// 	return nil, err
+	// }
 	
 	model := &cm.Course{Name:  req.Name, ImgURL: req.ImgURL}
 
@@ -60,8 +66,10 @@ func (s *Server) AddCourse(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
+	resp := &pb.AddCourseResp{Id: fmt.Sprint(model.ID)}
+
 	if len(req.TaskHeaders) == 0 {
-		return &pb.AddCourseResp{}, status.Error(codes.OK, "All is okey")
+		return resp, status.Error(codes.OK, "All is okey")
 	}
 
 	courseID := fmt.Sprint(model.ID)
@@ -78,7 +86,8 @@ func (s *Server) AddCourse(
 			return nil, err
 		}
 	}
-	return &pb.AddCourseResp{}, status.Error(codes.OK, "OK")
+
+	return resp, status.Error(codes.OK, "OK")
 }
 
 /*
@@ -90,11 +99,6 @@ func (s *Server) DeleteCourse(
 	ctx context.Context, 
 	req *pb.DeleteCourseReq,
 )	(*pb.DeleteCourseResp, error) {
-
-	if err := getRoleAndCheckThem(ctx); err != nil {
-		return nil, err
-	}
-
 	ID, err := strconv.ParseInt(req.Id, 10, 64)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid ID")
@@ -133,7 +137,7 @@ func (s *Server) GetCourse(
 	courseID := fmt.Sprint(course.ID)
 
 	ths, err := s.getTaskHeaderForCourse(courseID)
-	if err != nil {
+	if err != nil && status.Code(err) != codes.NotFound {
 		return nil, err
 	}
 
@@ -178,6 +182,7 @@ func (s *Server) GetAllCourses(
 	ctx context.Context, 
 	req *pb.GetAllCoursesReq,
 )	(*pb.GetAllCoursesResp, error) {
+
 	UID, err := getUIDFromCtx(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -231,9 +236,16 @@ func (s *Server) AddTaskHeader(
 		return nil,  status.Errorf(codes.Internal, "%v", err)
 	}
 
-	//TODO Add Tasks
+	taskHeaderID := fmt.Sprint(model.ID)
 
-	return &pb.AddTaskHeaderResp{}, status.Error(codes.OK, "Okay")
+	for _, t := range req.TaskHeader.Tasks {
+		_, err = s.AddTask(ctx, &pb.AddTaskReq{TaskHeaderId: taskHeaderID, Task: t})
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &pb.AddTaskHeaderResp{Id: fmt.Sprint(model.ID)}, status.Error(codes.OK, "Okay")
 }
 
 /*
