@@ -22,14 +22,34 @@ message Course {
 }
 
 service CoursesService {
-    // courses
-    rpc AddCourse           (AddCourseReq)          returns (AddCourseResp);
-    rpc UpdateCourse        (UpdateCourseReq)       returns (UpdateCourseResp);
-    rpc DeleteCourse        (DeleteCourseReq)       returns (DeleteCourseResp);
-    rpc GetCourse           (GetCourseReq)          returns (GetCourseResp);
-    rpc GetAllCourses       (GetAllCoursesReq)      returns (GetAllCoursesResp);
+    // Сourses --------------------------------------------
 
-    // TaskHeaders
+    // AddCourse add course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc AddCourse           (AddCourseReq)          returns (AddCourseResp);
+
+    // UpdateCourse update course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc UpdateCourse        (UpdateCourseReq)       returns (UpdateCourseResp);
+
+    // DeleteCourse delete course
+    // 
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc DeleteCourse        (DeleteCourseReq)       returns (DeleteCourseResp);
+
+    // GetCourse return course
+    rpc GetCourse           (GetCourseReq)          returns (GetCourseResp);
+
+    // GetAllCourses return all course for user 
+    //
+    // UID in metadata
+    rpc GetAllCourses       (GetAllCoursesReq)      returns (GetAllCoursesResp);
+    // ----------------------------------------------------
+
+
+    // TaskHeaders ----------------------------------------
     rpc AddTaskHeader       (AddTaskHeaderReq)      returns (AddTaskHeaderResp);
     rpc UpdateTaskHeader    (UpdateTaskHeaderReq)   returns (UpdateTaskHeaderResp);
     rpc DeleteTaskHeader    (DeleteTaskHeaderReq)   returns (DeleteTaskHeaderResp);
@@ -55,11 +75,11 @@ message AddCourseReq {
 
 message AddCourseResp {
     // TODO maybe add id of added course to resp
+    string id = 1;
 }
 
 message UpdateCourseReq {
-    string id               = 1;
-    Course updatedCourse    = 2;
+    Course updatedCourse    = 1;
 }
 
 message UpdateCourseResp {
@@ -96,7 +116,7 @@ message AddTaskHeaderReq {
 }
 
 message AddTaskHeaderResp {
-
+    string id = 1;
 }
 
 message UpdateTaskHeaderReq {
@@ -121,6 +141,7 @@ message AddTaskReq {
 }
 
 message AddTaskResp {
+    string id = 1;
 }
 
 message UpdateTaskReq {

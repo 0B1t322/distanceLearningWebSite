@@ -18,13 +18,25 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CoursesServiceClient interface {
-	// courses
+	// AddCourse add course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	AddCourse(ctx context.Context, in *AddCourseReq, opts ...grpc.CallOption) (*AddCourseResp, error)
+	// UpdateCourse update course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	UpdateCourse(ctx context.Context, in *UpdateCourseReq, opts ...grpc.CallOption) (*UpdateCourseResp, error)
+	// DeleteCourse delete course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	DeleteCourse(ctx context.Context, in *DeleteCourseReq, opts ...grpc.CallOption) (*DeleteCourseResp, error)
+	// GetCourse return course
 	GetCourse(ctx context.Context, in *GetCourseReq, opts ...grpc.CallOption) (*GetCourseResp, error)
+	// GetAllCourses return all course for user
+	//
+	// UID in metadata
 	GetAllCourses(ctx context.Context, in *GetAllCoursesReq, opts ...grpc.CallOption) (*GetAllCoursesResp, error)
-	// TaskHeaders
+	// TaskHeaders ----------------------------------------
 	AddTaskHeader(ctx context.Context, in *AddTaskHeaderReq, opts ...grpc.CallOption) (*AddTaskHeaderResp, error)
 	UpdateTaskHeader(ctx context.Context, in *UpdateTaskHeaderReq, opts ...grpc.CallOption) (*UpdateTaskHeaderResp, error)
 	DeleteTaskHeader(ctx context.Context, in *DeleteTaskHeaderReq, opts ...grpc.CallOption) (*DeleteTaskHeaderResp, error)
@@ -166,13 +178,25 @@ func (c *coursesServiceClient) DeleteUserInCourse(ctx context.Context, in *Delet
 // All implementations must embed UnimplementedCoursesServiceServer
 // for forward compatibility
 type CoursesServiceServer interface {
-	// courses
+	// AddCourse add course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	AddCourse(context.Context, *AddCourseReq) (*AddCourseResp, error)
+	// UpdateCourse update course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	UpdateCourse(context.Context, *UpdateCourseReq) (*UpdateCourseResp, error)
+	// DeleteCourse delete course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	DeleteCourse(context.Context, *DeleteCourseReq) (*DeleteCourseResp, error)
+	// GetCourse return course
 	GetCourse(context.Context, *GetCourseReq) (*GetCourseResp, error)
+	// GetAllCourses return all course for user
+	//
+	// UID in metadata
 	GetAllCourses(context.Context, *GetAllCoursesReq) (*GetAllCoursesResp, error)
-	// TaskHeaders
+	// TaskHeaders ----------------------------------------
 	AddTaskHeader(context.Context, *AddTaskHeaderReq) (*AddTaskHeaderResp, error)
 	UpdateTaskHeader(context.Context, *UpdateTaskHeaderReq) (*UpdateTaskHeaderResp, error)
 	DeleteTaskHeader(context.Context, *DeleteTaskHeaderReq) (*DeleteTaskHeaderResp, error)
