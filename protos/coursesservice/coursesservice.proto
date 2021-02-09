@@ -111,8 +111,9 @@ message GetAllCoursesResp {
 
 // TaskHeaders
 message AddTaskHeaderReq {
-    string courseId = 1;
-    string name     = 2;
+    string courseId         = 1;
+    string name             = 2;
+    repeated Task tasks     = 3;
 }
 
 message AddTaskHeaderResp {
