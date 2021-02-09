@@ -78,7 +78,8 @@ func (s *Server) AddCourse(
 			ctx,
 			&pb.AddTaskHeaderReq{
 				CourseId: courseID,
-				TaskHeader: th,
+				Name: th.Name,
+				Tasks: th.Tasks,
 			},
 		)
 
@@ -224,12 +225,8 @@ func (s *Server) AddTaskHeader(
 	req *pb.AddTaskHeaderReq, 
 )	(*pb.AddTaskHeaderResp, error) {
 	// TODO check for userid and  permission
-	ID, err := strconv.ParseInt(req.TaskHeader.Id, 10, 64)
-	if err !=  nil {
-		return nil,  status.Errorf(codes.InvalidArgument, "Invalid ID, err: %v", err)
-	}
 
-	model := &cm.TaskHeader{ID: ID, CourseID: req.CourseId, Name: req.TaskHeader.Name}
+	model := &cm.TaskHeader{CourseID: req.CourseId, Name: req.Name}
 	if err :=  s.courseController.AddTaskHeader(model); err == cc.ErrTaskHeaderExsist {
 		return nil, status.Errorf(codes.AlreadyExists, "%v", err)
 	} else if err != nil {
@@ -238,8 +235,8 @@ func (s *Server) AddTaskHeader(
 
 	taskHeaderID := fmt.Sprint(model.ID)
 
-	for _, t := range req.TaskHeader.Tasks {
-		_, err = s.AddTask(ctx, &pb.AddTaskReq{TaskHeaderId: taskHeaderID, Task: t})
+	for _, t := range req.Tasks {
+		_, err := s.AddTask(ctx, &pb.AddTaskReq{TaskHeaderId: taskHeaderID, Task: t})
 		if err != nil {
 			return nil, err
 		}
