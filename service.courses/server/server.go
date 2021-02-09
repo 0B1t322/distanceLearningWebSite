@@ -322,7 +322,7 @@ func (s *Server) AddTask(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &pb.AddTaskResp{}, status.Error(codes.OK, "Task Added")
+	return &pb.AddTaskResp{Id: fmt.Sprint(model.ID)}, status.Error(codes.OK, "Task Added")
 }
 
 /*
