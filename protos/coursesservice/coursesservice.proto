@@ -121,8 +121,7 @@ message AddTaskHeaderResp {
 }
 
 message UpdateTaskHeaderReq {
-    string id = 1;
-    TaskHeader taskHeader = 2;
+    TaskHeader taskHeader = 1;
 }
 
 message UpdateTaskHeaderResp {
@@ -138,7 +137,9 @@ message DeleteTaskHeaderResp {
 
 message AddTaskReq {
     string taskHeaderId = 1;
-    Task task = 2;
+    string name         = 2;
+    string imgUrl       = 3;
+    string contentURL   = 4;
 }
 
 message AddTaskResp {
@@ -146,8 +147,7 @@ message AddTaskResp {
 }
 
 message UpdateTaskReq {
-    string id = 1;
-    Task task = 2;
+    Task task = 1;
 }
 
 message UpdateTaskResp {
