@@ -73,7 +73,7 @@ var opts []grpc.DialOption
 
 
 func TestFunc_NewClient(t *testing.T) {
-	c, err :=client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1","5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -89,7 +89,7 @@ func TestFunc_AddCourse(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err :=client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1","5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -125,7 +125,7 @@ func TestFunc_AddCourse_AlreadyExsist(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err :=client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1","5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -174,7 +174,7 @@ func TestFunc_GetCourse(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err :=client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1","5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -222,7 +222,7 @@ func TestFunc_GetCourse_NotFound(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err :=client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1","5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -243,7 +243,7 @@ func TestFunc_UpdateCourse(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err :=client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1","5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -303,7 +303,7 @@ func TestFunc_GetAllCourses(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err :=client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1","5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -365,7 +365,7 @@ func TestFunc_GetAllCourses_NotFound(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err :=client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1","5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -373,6 +373,123 @@ func TestFunc_GetAllCourses_NotFound(t *testing.T) {
 	defer c.Close()
 
 	if _, err := c.GetAllCourses(context.Background(), &coursesservice.GetAllCoursesReq{}); status.Code(err) != codes.NotFound {
+		t.Log(err)
+		t.FailNow()
+	}
+}
+
+func TestFunc_AddTaskHeader(t *testing.T) {
+	err := preapareOpts()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	c, err := client.NewClient("127.0.0.1","5051", opts)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer c.Close()
+
+	var courseID string
+	if course, err := c.AddCourse(
+		context.Background(),
+		&coursesservice.AddCourseReq{
+			Name: "course",
+			ImgURL: "img",
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	} else {
+		courseID = course.Id
+	}
+	defer func() {
+		if _, err := c.DeleteCourse(
+			context.Background(),
+			&coursesservice.DeleteCourseReq{
+				Id: courseID,
+			},
+		); err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+	}()
+
+	var ID string
+	if resp, err := c.AddTaskHeader(
+		context.Background(),
+		&coursesservice.AddTaskHeaderReq{
+			CourseId: courseID,
+			Name: "task_header_1",
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	} else {
+		t.Logf("Task_header with id: %v was added\n", resp.Id)
+		ID = resp.Id	
+	}
+
+	if _, err := c.DeleteTaskHeader(
+		context.Background(),
+		&coursesservice.DeleteTaskHeaderReq{
+			Id: ID,
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+}
+
+func TestFunc_AddTaskHeader_AlreadyExsist(t *testing.T) {
+	err := preapareOpts()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	c, err := client.NewClient("127.0.0.1","5051", opts)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer c.Close()
+
+	var taskHeaderID string
+	if resp, err := c.AddTaskHeader(
+		context.Background(),
+		&coursesservice.AddTaskHeaderReq{
+			Name: "task_header_1",
+			CourseId: "2",
+		},
+	);err != nil {
+		t.Log(err)
+		t.FailNow()
+	} else {
+		taskHeaderID = resp.Id
+		t.Logf("Task_header with id: %v was added\n", resp.Id)
+	}
+	defer func() {
+		if _, err := c.DeleteTaskHeader(
+			context.Background(),
+			&coursesservice.DeleteTaskHeaderReq{
+				Id: taskHeaderID,
+			},
+		); err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+	}()
+
+	if _, err := c.AddTaskHeader(
+		context.Background(),
+		&coursesservice.AddTaskHeaderReq{
+			Name: "task_header_1",
+			CourseId: "2",
+		},
+	); status.Code(err) != codes.AlreadyExists {
 		t.Log(err)
 		t.FailNow()
 	}
