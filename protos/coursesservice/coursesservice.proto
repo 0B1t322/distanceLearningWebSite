@@ -112,7 +112,7 @@ message GetAllCoursesResp {
 // TaskHeaders
 message AddTaskHeaderReq {
     string courseId = 1;
-    TaskHeader taskHeader = 2;
+    string name     = 2;
 }
 
 message AddTaskHeaderResp {
