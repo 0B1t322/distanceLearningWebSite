@@ -10,6 +10,7 @@ services:
     volumes:
       - "./db/scripts/auth.sql:/docker-entrypoint-initdb.d/1.sql"
       - "./db/scripts/courses.sql:/docker-entrypoint-initdb.d/2.sql"
+      - "./db/scripts/adduser.sql:/docker-entrypoint-initdb.d/3.sql"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: docker
