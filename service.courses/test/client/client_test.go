@@ -494,3 +494,155 @@ func TestFunc_AddTaskHeader_AlreadyExsist(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestFunc_UpdateTaskHeader(t *testing.T) {
+	err := preapareOpts()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	c, err := client.NewClient("127.0.0.1","5051", opts)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer c.Close()
+
+	var taskHeaderID string
+	if resp, err := c.AddTaskHeader(
+		context.Background(),
+		&coursesservice.AddTaskHeaderReq{
+			CourseId: "0",
+			Name: "task_header_1",
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	} else {
+		taskHeaderID = resp.Id
+	}
+	defer func() {
+		if _,  err := c.DeleteTaskHeader(
+			context.Background(),
+			&coursesservice.DeleteTaskHeaderReq{
+				Id: taskHeaderID,
+			},
+		); err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+	}()
+
+	if _, err := c.UpdateTaskHeader(
+		context.Background(),
+		&coursesservice.UpdateTaskHeaderReq{
+			TaskHeader: &coursesservice.TaskHeader{
+				Id: taskHeaderID,
+				Name: "updated_task_header_1",
+			},
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+}
+
+func TestFunc_AddTask(t *testing.T) {
+	err := preapareOpts()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	c, err := client.NewClient("127.0.0.1","5051", opts)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer c.Close()
+
+	var taskID string
+	if resp, err := c.AddTask(
+		context.Background(),
+		&coursesservice.AddTaskReq{
+			TaskHeaderId: "2",
+			Name: "task_1",
+			ImgUrl: "img",
+			ContentURL: "content",
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	} else {
+		t.Logf("Task with id: %v added", resp.Id)
+		taskID = resp.Id
+	}
+	defer func() {
+		if _, err := c.DeleteTask(
+			context.Background(),
+			&coursesservice.DeleteTaskReq{
+				Id: taskID,
+			},
+		); err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+	}()
+}
+
+func TestFunc_AddTask_AlreadyExsist(t *testing.T) {
+	err := preapareOpts()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	c, err := client.NewClient("127.0.0.1","5051", opts)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer c.Close()
+
+	var taskID string
+	if resp, err := c.AddTask(
+		context.Background(),
+		&coursesservice.AddTaskReq{
+			TaskHeaderId: "2",
+			Name: "task_1",
+			ImgUrl: "img",
+			ContentURL: "content",
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	} else {
+		t.Logf("Task with id: %v added", resp.Id)
+		taskID = resp.Id
+	}
+	defer func() {
+		if _, err := c.DeleteTask(
+			context.Background(),
+			&coursesservice.DeleteTaskReq{
+				Id: taskID,
+			},
+		); err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+	}()
+
+	if _, err := c.AddTask(
+		context.Background(),
+		&coursesservice.AddTaskReq{
+			TaskHeaderId: "2",
+			Name: "task_1",
+			ImgUrl: "img",
+			ContentURL: "content",
+		},
+	); status.Code(err) != codes.AlreadyExists {
+		t.Log(err)
+		t.FailNow()
+	}
+}
