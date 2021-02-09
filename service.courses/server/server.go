@@ -236,7 +236,15 @@ func (s *Server) AddTaskHeader(
 	taskHeaderID := fmt.Sprint(model.ID)
 
 	for _, t := range req.Tasks {
-		_, err := s.AddTask(ctx, &pb.AddTaskReq{TaskHeaderId: taskHeaderID, Task: t})
+		_, err := s.AddTask(
+			ctx, 
+			&pb.AddTaskReq{
+				TaskHeaderId: taskHeaderID, 
+				Name: t.Name,
+				ImgUrl: t.ImgURL,
+				ContentURL: t.ContentURL,
+			},
+		)
 		if err != nil {
 			return nil, err
 		}
@@ -303,8 +311,8 @@ func (s *Server) AddTask(
 	req *pb.AddTaskReq,
 )	(*pb.AddTaskResp, error) {
 	model := &cm.Task {
-		Name: req.Task.Name,
-		ImgURL: req.Task.ImgURL,
+		Name: req.Name,
+		ImgURL: req.ImgUrl,
 		TaskHeaderID: req.TaskHeaderId,
 	}
 
@@ -326,7 +334,7 @@ func (s *Server) UpdateTask(
 	ctx context.Context,
 	req *pb.UpdateTaskReq,
 )	(*pb.UpdateTaskResp, error) {
-	ID, err := strconv.ParseInt(req.Id, 10, 64)
+	ID, err := strconv.ParseInt(req.Task.Id, 10, 64)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid ID")
 	}
