@@ -1,18 +1,19 @@
 package client
 
 import (
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/coursesservice"
 	"errors"
 	"io"
 
 	pkg_client "github.com/0B1t322/distanceLearningWebSite/pkg/client"
 
-	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
+	
 	"google.golang.org/grpc"
 )
 
 type Client interface {
+	pb.CoursesServiceClient
 	io.Closer
-	pb.AuthServiceClient
 }
 
 func NewClient(
@@ -20,21 +21,21 @@ func NewClient(
 	port string, 
 	opts []grpc.DialOption,
 ) (Client, error) {
-	c, conn, err := pkg_client.New(network, port, opts, pb.NewAuthServiceClient)
+	c, conn, err := pkg_client.New(network, port, opts,pb.NewCoursesServiceClient)
 	if err != nil {
 		return nil, err
 	}
 
-	client, ok := c.(pb.AuthServiceClient)
+	client, ok := c.(pb.CoursesServiceClient)
 	if !ok {
 		return nil, errors.New("Not okay")
 	}
 
 	return &struct{
+		pb.CoursesServiceClient
 		io.Closer
-		pb.AuthServiceClient
 	}{
-		conn,
 		client,
+		conn,
 	}, nil
 }

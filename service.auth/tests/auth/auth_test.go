@@ -1,6 +1,7 @@
 package auth_test
 
 import (
+	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
 	uc "github.com/0B1t322/distanceLearningWebSite/pkg/controllers/user"
 	"errors"
 	"testing"
@@ -8,7 +9,7 @@ import (
 
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
-	"github.com/0B1t322/service.auth/pkg/auth"
+
 )
 
 var (
