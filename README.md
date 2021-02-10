@@ -11,7 +11,7 @@
 ## Что уже сделано до рабочего состояине
 Сервис          | Done                  | требует рефактора     |
 :------------   | :-------------        | :-------------        |
-Auth            | :heavy_check_mark:    | :heavy_check_mark:    |
-Courses         | :heavy_check_mark:    | :heavy_check_mark:    |
-Cache           | :white_check_mark:    |                       |
-Front-end       | :white_check_mark:    |                       |
+Auth            | :white_check_mark:    |  :white_check_mark:   |
+Courses         | :white_check_mark:    |  :white_check_mark:   |
+Cache           | :heavy_check_mark:    |                       |
+Front-end       | :heavy_check_mark:    |                       |
