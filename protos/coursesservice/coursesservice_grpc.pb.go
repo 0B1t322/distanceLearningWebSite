@@ -36,16 +36,39 @@ type CoursesServiceClient interface {
 	//
 	// UID in metadata
 	GetAllCourses(ctx context.Context, in *GetAllCoursesReq, opts ...grpc.CallOption) (*GetAllCoursesResp, error)
-	// TaskHeaders ----------------------------------------
+	// AddTaskHeader add taskHeadewr for course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	AddTaskHeader(ctx context.Context, in *AddTaskHeaderReq, opts ...grpc.CallOption) (*AddTaskHeaderResp, error)
+	// UpdateTaskHeader update taskHeadewr for course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	UpdateTaskHeader(ctx context.Context, in *UpdateTaskHeaderReq, opts ...grpc.CallOption) (*UpdateTaskHeaderResp, error)
+	// DeleteTaskHeader delete taskheader from course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	DeleteTaskHeader(ctx context.Context, in *DeleteTaskHeaderReq, opts ...grpc.CallOption) (*DeleteTaskHeaderResp, error)
 	// Tasks
+	// AddTask add taask in task header
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	AddTask(ctx context.Context, in *AddTaskReq, opts ...grpc.CallOption) (*AddTaskResp, error)
+	// UpdateTask update task header in course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	UpdateTask(ctx context.Context, in *UpdateTaskReq, opts ...grpc.CallOption) (*UpdateTaskResp, error)
+	// DeleteTask delete task from task header
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	DeleteTask(ctx context.Context, in *DeleteTaskReq, opts ...grpc.CallOption) (*DeleteTaskResp, error)
 	// UserInCourse
+	// AddUserInCourse add user in course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	AddUserInCourse(ctx context.Context, in *AddUserInCourseReq, opts ...grpc.CallOption) (*AddUserInCourseResp, error)
+	//DeleteUserInCourse dleete user in course
+	//
+	//To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	DeleteUserInCourse(ctx context.Context, in *DeleteUserInCourseReq, opts ...grpc.CallOption) (*DeleteUserInCourseResp, error)
 }
 
@@ -196,16 +219,39 @@ type CoursesServiceServer interface {
 	//
 	// UID in metadata
 	GetAllCourses(context.Context, *GetAllCoursesReq) (*GetAllCoursesResp, error)
-	// TaskHeaders ----------------------------------------
+	// AddTaskHeader add taskHeadewr for course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	AddTaskHeader(context.Context, *AddTaskHeaderReq) (*AddTaskHeaderResp, error)
+	// UpdateTaskHeader update taskHeadewr for course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	UpdateTaskHeader(context.Context, *UpdateTaskHeaderReq) (*UpdateTaskHeaderResp, error)
+	// DeleteTaskHeader delete taskheader from course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	DeleteTaskHeader(context.Context, *DeleteTaskHeaderReq) (*DeleteTaskHeaderResp, error)
 	// Tasks
+	// AddTask add taask in task header
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	AddTask(context.Context, *AddTaskReq) (*AddTaskResp, error)
+	// UpdateTask update task header in course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	UpdateTask(context.Context, *UpdateTaskReq) (*UpdateTaskResp, error)
+	// DeleteTask delete task from task header
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	DeleteTask(context.Context, *DeleteTaskReq) (*DeleteTaskResp, error)
 	// UserInCourse
+	// AddUserInCourse add user in course
+	//
+	// To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	AddUserInCourse(context.Context, *AddUserInCourseReq) (*AddUserInCourseResp, error)
+	//DeleteUserInCourse dleete user in course
+	//
+	//To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
 	DeleteUserInCourse(context.Context, *DeleteUserInCourseReq) (*DeleteUserInCourseResp, error)
 	mustEmbedUnimplementedCoursesServiceServer()
 }

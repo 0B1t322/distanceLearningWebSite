@@ -50,17 +50,42 @@ service CoursesService {
 
 
     // TaskHeaders ----------------------------------------
+    
+    // AddTaskHeader add taskHeadewr for course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
     rpc AddTaskHeader       (AddTaskHeaderReq)      returns (AddTaskHeaderResp);
+    // UpdateTaskHeader update taskHeadewr for course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
     rpc UpdateTaskHeader    (UpdateTaskHeaderReq)   returns (UpdateTaskHeaderResp);
+    // DeleteTaskHeader delete taskheader from course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
     rpc DeleteTaskHeader    (DeleteTaskHeaderReq)   returns (DeleteTaskHeaderResp);
 
     // Tasks
+    // AddTask add taask in task header
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
     rpc AddTask             (AddTaskReq)            returns (AddTaskResp);
+    // UpdateTask update task header in course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
     rpc UpdateTask          (UpdateTaskReq)         returns (UpdateTaskResp);
+    // DeleteTask delete task from task header
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
     rpc DeleteTask          (DeleteTaskReq)         returns (DeleteTaskResp);
 
     // UserInCourse
+    // AddUserInCourse add user in course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
     rpc AddUserInCourse     (AddUserInCourseReq)    returns (AddUserInCourseResp);
+    //DeleteUserInCourse dleete user in course
+    //
+    //To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
     rpc DeleteUserInCourse  (DeleteUserInCourseReq) returns (DeleteUserInCourseResp);
     
 }
