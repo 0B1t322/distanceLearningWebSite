@@ -646,3 +646,147 @@ func TestFunc_AddTask_AlreadyExsist(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestFunc_UpdateTask(t *testing.T) {
+	err := preapareOpts()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	c, err := client.NewClient("127.0.0.1","5051", opts)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer c.Close()
+
+	var taskID string
+	if resp, err := c.AddTask(
+		context.Background(),
+		&coursesservice.AddTaskReq{
+			TaskHeaderId: "2",
+			Name: "task_1",
+			ImgUrl: "img",
+			ContentURL: "content",
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	} else {
+		t.Logf("Task with id: %v added", resp.Id)
+		taskID = resp.Id
+	}
+	defer func() {
+		if _, err := c.DeleteTask(
+			context.Background(),
+			&coursesservice.DeleteTaskReq{
+				Id: taskID,
+			},
+		); err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+	}()
+
+	if _, err := c.UpdateTask(
+		context.Background(),
+		&coursesservice.UpdateTaskReq{
+			Task: &coursesservice.Task{
+				Id: taskID,
+				Name: "updated_task_1",
+			},
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+}
+
+func TestFunc_AddUserInCourse(t *testing.T) {
+	err := preapareOpts()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	c, err := client.NewClient("127.0.0.1","5051", opts)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer c.Close()
+
+	if _, err := c.AddUserInCourse(
+		context.Background(),
+		&coursesservice.AddUserInCourseReq{
+			CourseID: "2",
+			UserID: "1",
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer func() {
+		if _, err := c.DeleteUserInCourse(
+			context.Background(),
+			&coursesservice.DeleteUserInCourseReq{
+				CourseID: "2",
+				UserID: "1",
+			},
+		);err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+	}()
+}
+
+func TestFunc_AddUserInCourse_AlreadyExists(t *testing.T) {
+	err := preapareOpts()
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	c, err := client.NewClient("127.0.0.1","5051", opts)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	defer c.Close()
+
+	if _, err := c.AddUserInCourse(
+		context.Background(),
+		&coursesservice.AddUserInCourseReq{
+			CourseID: "2",
+			UserID: "1",
+		},
+	); err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	defer func() {
+		if _, err := c.DeleteUserInCourse(
+			context.Background(),
+			&coursesservice.DeleteUserInCourseReq{
+				CourseID: "2",
+				UserID: "1",
+			},
+		);err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+	}()
+
+	if _, err := c.AddUserInCourse(
+		context.Background(),
+		&coursesservice.AddUserInCourseReq{
+			CourseID: "2",
+			UserID: "1",
+		},
+	); status.Code(err) != codes.AlreadyExists {
+		t.Log(err)
+		t.FailNow()
+	}
+}

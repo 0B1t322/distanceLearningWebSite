@@ -335,6 +335,7 @@ func (s *Server) UpdateTask(
 	req *pb.UpdateTaskReq,
 )	(*pb.UpdateTaskResp, error) {
 	ID, err := strconv.ParseInt(req.Task.Id, 10, 64)
+	
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid ID")
 	}
