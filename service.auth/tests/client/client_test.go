@@ -1,6 +1,7 @@
 package client_test
 
 import (
+	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
 	"time"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"context"
@@ -9,7 +10,7 @@ import (
 
 	uc "github.com/0B1t322/distanceLearningWebSite/pkg/controllers/user"
 
-	"github.com/0B1t322/service.auth/pkg/auth"
+	
 	"github.com/0B1t322/service.auth/server"
 
 	"github.com/0B1t322/distanceLearningWebSite/pkg/models/user"
@@ -17,7 +18,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/0B1t322/service.auth/authservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 
 	"github.com/0B1t322/service.auth/client"
 	"google.golang.org/grpc"
@@ -44,7 +45,7 @@ func TestFunc_SignUp(t *testing.T) {
 		t.FailNow()
 	}
 	defer c.Close()
-
+	
 	md := metadata.Pairs("role", u.Role)
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
 

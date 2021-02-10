@@ -96,6 +96,11 @@ func (m *Manager) OpenDataBase(dbName string) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+	// TODO check this settings
+	
+	sqlDB.SetConnMaxLifetime(time.Hour)
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(100)
 
 	return gorm.Open(
 		mysql.New(

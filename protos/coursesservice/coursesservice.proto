@@ -1,0 +1,203 @@
+syntax = "proto3";
+
+message Task {
+    string id           = 1;
+    string name         = 2;
+    string imgURL       = 3;
+    string contentURL   = 4;
+    // TODO подумать о юрл контенте
+}
+
+message TaskHeader {
+    string          id      =   1;
+    string          name    =   2;
+    repeated Task   tasks   =   3;
+}
+
+message Course {
+    string id       = 1;
+    string name     = 2;
+    string imgURL   = 3;
+    repeated TaskHeader taskHeaders = 4;
+}
+
+service CoursesService {
+    // Сourses --------------------------------------------
+
+    // AddCourse add course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc AddCourse           (AddCourseReq)          returns (AddCourseResp);
+
+    // UpdateCourse update course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc UpdateCourse        (UpdateCourseReq)       returns (UpdateCourseResp);
+
+    // DeleteCourse delete course
+    // 
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc DeleteCourse        (DeleteCourseReq)       returns (DeleteCourseResp);
+
+    // GetCourse return course
+    rpc GetCourse           (GetCourseReq)          returns (GetCourseResp);
+
+    // GetAllCourses return all course for user 
+    //
+    // UID in metadata
+    rpc GetAllCourses       (GetAllCoursesReq)      returns (GetAllCoursesResp);
+    // ----------------------------------------------------
+
+
+    // TaskHeaders ----------------------------------------
+    
+    // AddTaskHeader add taskHeadewr for course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc AddTaskHeader       (AddTaskHeaderReq)      returns (AddTaskHeaderResp);
+    // UpdateTaskHeader update taskHeadewr for course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc UpdateTaskHeader    (UpdateTaskHeaderReq)   returns (UpdateTaskHeaderResp);
+    // DeleteTaskHeader delete taskheader from course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc DeleteTaskHeader    (DeleteTaskHeaderReq)   returns (DeleteTaskHeaderResp);
+
+    // Tasks
+    // AddTask add taask in task header
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc AddTask             (AddTaskReq)            returns (AddTaskResp);
+    // UpdateTask update task header in course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc UpdateTask          (UpdateTaskReq)         returns (UpdateTaskResp);
+    // DeleteTask delete task from task header
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc DeleteTask          (DeleteTaskReq)         returns (DeleteTaskResp);
+
+    // UserInCourse
+    // AddUserInCourse add user in course
+    //
+    // To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc AddUserInCourse     (AddUserInCourseReq)    returns (AddUserInCourseResp);
+    //DeleteUserInCourse dleete user in course
+    //
+    //To call this procedure the role of the user should be - ["teacher", "admin", "moderator"]
+    rpc DeleteUserInCourse  (DeleteUserInCourseReq) returns (DeleteUserInCourseResp);
+    
+}
+
+// также токен будет передаваться с помощью клиенсктого интерсептора, парситься и из него в контексте передадут UID role и тд
+//  courses  req/resp
+message AddCourseReq {
+    string              name        =   1;
+    string              imgURL      =   2;
+    repeated TaskHeader taskHeaders =   3;
+}
+
+message AddCourseResp {
+    // TODO maybe add id of added course to resp
+    string id = 1;
+}
+
+message UpdateCourseReq {
+    Course updatedCourse    = 1;
+}
+
+message UpdateCourseResp {
+
+}
+
+message DeleteCourseReq {
+    string id = 1;
+}
+
+message DeleteCourseResp {
+
+}
+
+message GetCourseReq {
+    string id = 1;
+}
+
+message GetCourseResp {
+    Course course   = 1; 
+}
+
+message GetAllCoursesReq {
+}
+
+message GetAllCoursesResp {
+    repeated Course courses = 1;
+}
+
+// TaskHeaders
+message AddTaskHeaderReq {
+    string courseId         = 1;
+    string name             = 2;
+    repeated Task tasks     = 3;
+}
+
+message AddTaskHeaderResp {
+    string id = 1;
+}
+
+message UpdateTaskHeaderReq {
+    TaskHeader taskHeader = 1;
+}
+
+message UpdateTaskHeaderResp {
+
+}
+
+message DeleteTaskHeaderReq {
+    string id = 1;
+}
+
+message DeleteTaskHeaderResp {
+}
+
+message AddTaskReq {
+    string taskHeaderId = 1;
+    string name         = 2;
+    string imgUrl       = 3;
+    string contentURL   = 4;
+}
+
+message AddTaskResp {
+    string id = 1;
+}
+
+message UpdateTaskReq {
+    Task task = 1;
+}
+
+message UpdateTaskResp {
+
+}
+
+message DeleteTaskReq {
+    string id = 1;
+}
+
+message DeleteTaskResp {
+}
+
+message AddUserInCourseReq {
+    string courseID = 1;
+    string userID   = 2;
+}
+
+message AddUserInCourseResp {
+}
+
+message DeleteUserInCourseReq {
+    string courseID = 1;
+    string userID   = 2;
+}
+
+message DeleteUserInCourseResp{
+}

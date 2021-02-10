@@ -1,6 +1,9 @@
 package server
 
 import (
+	
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
 	uc "github.com/0B1t322/distanceLearningWebSite/pkg/controllers/user"
 	"context"
 
@@ -14,8 +17,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/0B1t322/service.auth/authservice"
-	"github.com/0B1t322/service.auth/pkg/auth"
+
 )
 
 // Server is auth microservice struct
@@ -102,9 +104,6 @@ func (s *Server) SignUp(
 	}
 	
 	if !ok {
-		log.Warn("Error of get role from ctx")
-		log.Infoln("role is: ",role)
-		log.Infoln(ctx.Value("role"))
 		return &pb.AuthResponse{
 			Token: "",
 		}, status.Error(
@@ -179,8 +178,7 @@ func (s *Server) unmarshallTokenInfo(tokenInfo *auth.TokenInfo) (*pb.TokenInfo, 
 	res := &pb.TokenInfo{}
 	err := marshall.Marshall(tokenInfo, res)
 	if err != nil {
-		log.Errorf("Error on marshalling: %v" ,err)
-		return nil, status.Errorf(codes.Internal, "Internal server err")
+		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
 	return res, err

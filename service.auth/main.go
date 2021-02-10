@@ -1,10 +1,12 @@
 package main
 
 import (
+	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/middleware"
 	"time"
-	"github.com/0B1t322/service.auth/pkg/auth"
+
 	"github.com/0B1t322/service.auth/server"
-	pb "github.com/0B1t322/service.auth/authservice"
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/authservice"
 	"flag"
 	"fmt"
 	"net"
@@ -16,27 +18,31 @@ import (
 )
 
 var (
-	port 		= flag.String("port", "5050", "start grpc server on this port")
-	secretKey	= flag.String("sk", "my_secret_key", "secret key - need to hash JWT token")
+	port 		= 	flag.String("port", "5050", "start grpc server on this port")
+	secretKey	= 	flag.String("sk", "my_secret_key", "secret key - need to hash JWT token")
+	logger 		=	log.New()
 )
 
 
 func main() {
-	// db.Init() alredy parse flags so we don't need to write this again
 	flag.Parse()
+
+	logger.ReportCaller = true
 	
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
 	if err != nil {
-		log.Panicln(err)
+		logger.Panicln(err)
 	}
 
 	opts := []grpc.ServerOption{
-		
+		grpc.ChainUnaryInterceptor(
+			middleware.ErrorLoggerUnaryInterceptor(logger),
+		),
 	}
 
 	DB, err := db.DBManger.OpenDataBase("auth")
 	if err != nil {
-		log.Panic(err)
+		logger.Panic(err)
 	}
 
 	grpcServer := grpc.NewServer(opts...)
@@ -52,10 +58,10 @@ func main() {
 		),
 	)
 
-	log.Infof("Starting grpc server on: %s\n", *port)
+	logger.Infof("Starting grpc server on: %s\n", *port)
 
 	if err := grpcServer.Serve(lis); err != nil {
-		log.Panicf("failed to start server: %v",err)
+		logger.Panicf("failed to start server: %v",err)
 	}
 
 	

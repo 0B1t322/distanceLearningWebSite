@@ -10,7 +10,7 @@ import (
 )
 
 type TokenParser interface {
-	ParseToken(accessToken string, signingKey []byte) (TokenInfo, error)
+	ParseToken(accessToken string, signingKey []byte) (*TokenInfo, error)
 }
 
 /*
