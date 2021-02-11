@@ -13,5 +13,5 @@
 :------------   | :-------------        | :-------------        |
 Auth            | :white_check_mark:    |  :white_check_mark:   |
 Courses         | :white_check_mark:    |  :white_check_mark:   |
-Cache           | :heavy_check_mark:    |                       |
-Front-end       | :heavy_check_mark:    |                       |
+Cache           |                       |                       |
+Front-end       |                       |                       |
