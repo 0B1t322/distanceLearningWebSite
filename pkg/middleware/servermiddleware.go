@@ -1,13 +1,16 @@
 package middleware
 
 import (
-	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"google.golang.org/grpc/metadata"
 	"context"
-	"google.golang.org/grpc"
+	"strings"
+
+	"github.com/0B1t322/distanceLearningWebSite/pkg/auth"
+	"github.com/0B1t322/distanceLearningWebSite/pkg/hashlist"
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 /*
@@ -86,6 +89,34 @@ func TokenParsesInterceptor(sk string) grpc.UnaryServerInterceptor {
 				"role", 	tokenInfo.Role,	
 			),
 		)
+
+		return handler(ctx, req)
+	}
+}
+
+//CheckFunc type for arg check some metadata on ctx and return true/false if you can launch this methods
+type CheckFunc func(context.Context) bool
+
+// MethodsCheckerUnaryInterceptor check some condinition before laucnh current methods
+// in hash list you
+func MethodsCheckerUnaryInterceptor(
+	f CheckFunc, 
+	h hashlist.HashList,
+) grpc.UnaryServerInterceptor {
+	return func(
+		ctx context.Context, 
+		req interface{}, 
+		info *grpc.UnaryServerInfo, 
+		handler grpc.UnaryHandler,
+	) (resp interface{}, err error) {
+		lm := strings.ToLower(info.FullMethod)
+		if !h.Find(lm){
+			return handler(ctx, req)
+		}
+
+		if !f(ctx) {
+			return nil, status.Error(codes.PermissionDenied, "You don't have permission to launch this procedure")
+		}
 
 		return handler(ctx, req)
 	}
