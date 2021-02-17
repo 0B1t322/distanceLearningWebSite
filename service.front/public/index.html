@@ -1,17 +1,86 @@
 <!DOCTYPE html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="main-logo.png">
+    <title>ЛКС МИРЭА</title>
+</head>
+<body>
+<noscript></noscript>
+<!---->
+<!--масштабирование-->
+<!--pt (padding-top)-->
+<!--mb (margin-bottom) -->
+<div id="app"></div>
+<div class="container pt-2" style="background-color: rgb(236,236,244);">
+    <!--градиент в шапку-->
+    <div class="row mb-3" style="background-color: rgb(4,190,227);">
+        <!--добавить картинку-лого-->
+        <div class="col mt-1" id="mirea-font">
+            <img align="left" alt=""
+                 class="logo-image"
+                 src="https://www.mirea.ru/upload/medialibrary/80f/MIREA_Gerb_Colour.png">
+            <h1>МИРЭА-АСИСТЕНТ</h1>
+            <p>Личный Консультант Студента</p>
+        </div>
+        <!--сделать всплывающее окно +нормальные логотипы и фото без шакализма-->
+        <!--скрипт для валидации-->
+        <!--дизайн кнопки-->
+        <form action="auth.html" target="_blank">
+            <button  class="btn btn-primary mt-5 mr-5 mb-3">Войти</button>
+        </form>
+
+    </div>
+
+    <div class="row" id="menu" style="background-color: rgb(247, 247, 244);">
+        <div class="col mb-4 pt-3">
+
+            <button class="btn btn-outline-success mr-3"><strong>&#9773 меню</strong></button>
+            <hr>
+
+            <!--всплывающее окно-->
+            <!--вывод данных через v-for -->
+            <ul class="list-group" >
+                <li  class="list-group-item list-group-item-action pointer">Личнный кабинет</li>
+                <li  class="list-group-item list-group-item-action pointer">Домашняя страница</li>
+                <li  class="list-group-item list-group-item-action pointer">Курсы</li>
+                <li  class="list-group-item list-group-item-action pointer">Мессенджер</li>
+                <li  class="list-group-item list-group-item-action pointer">Оценки</li>
+                <li  class="list-group-item list-group-item-action pointer">Календарь</li>
+            </ul>
+        </div>
+        <div class="col-md-8 pt-3">
+            <div class="row">
+                <div class="col-md-5">
+                    <h2>Главная страница</h2>
+                    <p>Новости</p>
+                        <img src="anonim.jpeg">
+                        <label>повезло повезло</label>
+                </div>
+                <div class="col-md-7 pt-2" >
+                    <div class="form-group">
+                        <label for="search">Поиск по сайту</label>
+                        <input type="text" class="form-control" id="search" placeholder="Например, расписание ...">
+                    </div>
+                    <h5 style="text-align: center;background-color:#e1e1e2">Расписание</h5>
+                    <!--динамический список-->
+                    <ul style="background-color:#e1e1e2" >
+                        <li>1 - <strong>Java (пр)</strong></li>
+                        <li>2 - <strong>Матанализ (лк)</strong></li>
+                        <li>3 - <strong>Проектирование БД (пр)</strong></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/vue@next"></script>
+</body>
 </html>

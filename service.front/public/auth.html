@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/css/auth-style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="main-logo.png">
+    <title>Авторизация</title>
+</head>
+<body>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Заголовок (надо шрифт другой) мб вообще дефолтный поставить -->
+<h1 class="mt-4">Авторизация</h1>
+        <hr>
+        <!-- Иконка которую шакалит -->
+        <div class="fadeIn first">
+            <img src="https://v3.vuejs.org/logo.png" id="icon" alt="User Icon" />
+        </div>
+
+        <!-- Основная форма -->
+        <form>
+            <input type="text" id="login" class="fadeIn second" name="login" placeholder="Логин">
+            <input type="text" id="password" class="fadeIn third" name="login" placeholder="Пароль">
+            <input type="submit" class="fadeIn fourth" value="Войти">
+        </form>
+
+        <!-- Тоже дефолтная вещь -->
+        <div id="formFooter">
+            <a class="underlineHover" href="#">Забыли пароль?</a>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
