@@ -109,7 +109,7 @@ func MethodsCheckerUnaryInterceptor(
 		info *grpc.UnaryServerInfo, 
 		handler grpc.UnaryHandler,
 	) (resp interface{}, err error) {
-		lm := strings.ToLower(info.FullMethod)
+		lm := getMethodNameFromFull( strings.ToLower(info.FullMethod) )
 		if !h.Find(lm){
 			return handler(ctx, req)
 		}
@@ -120,4 +120,8 @@ func MethodsCheckerUnaryInterceptor(
 
 		return handler(ctx, req)
 	}
+}
+
+func getMethodNameFromFull(fullMethod string) string {
+	return fullMethod[strings.LastIndex(fullMethod, "/") + 1:]
 }

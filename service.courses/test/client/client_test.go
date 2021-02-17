@@ -41,13 +41,13 @@ func init() {
 }
 
 func getToken() (string, error) {
-	c, err := auth_client.NewClient("127.0.0.1","5050", []grpc.DialOption{grpc.WithInsecure()})
+	c, err := auth_client.NewClient("127.0.0.1", "5050", []grpc.DialOption{grpc.WithInsecure()})
 	if err != nil {
 		return "", err
 	}
 	defer c.Close()
 
-	resp, err := c.SignIn(context.Background(), &authservice.AuthRequest{Username: "dan", Password:"123"})
+	resp, err := c.SignIn(context.Background(), &authservice.AuthRequest{Username: "dan", Password: "123"})
 	if err != nil {
 		return "", err
 	}
@@ -62,7 +62,7 @@ func preapareOpts() error {
 	}
 
 	opts = append(
-		opts, 
+		opts,
 		grpc.WithUnaryInterceptor(grpc_middleware.TokenUnaryClientInterceptor(token)),
 	)
 
@@ -71,15 +71,14 @@ func preapareOpts() error {
 
 var opts []grpc.DialOption
 
-
 func TestFunc_NewClient(t *testing.T) {
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
 	}
 	defer c.Close()
-	
+
 }
 
 func TestFunc_AddCourse(t *testing.T) {
@@ -89,19 +88,18 @@ func TestFunc_AddCourse(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
 	}
 	defer c.Close()
-	
-	resp, err := c.AddCourse(
-		context.Background(), 
-		&coursesservice.AddCourseReq{
-			Name: "course",
-			ImgURL: "img",
 
+	resp, err := c.AddCourse(
+		context.Background(),
+		&coursesservice.AddCourseReq{
+			Name:   "course",
+			ImgURL: "img",
 		},
 	)
 	if err != nil {
@@ -112,7 +110,7 @@ func TestFunc_AddCourse(t *testing.T) {
 	t.Logf("course add with id: %s\n", resp.Id)
 
 	_, err = c.DeleteCourse(context.Background(), &coursesservice.DeleteCourseReq{Id: resp.Id})
-	if  err != nil {
+	if err != nil {
 		t.Log(err)
 		t.FailNow()
 	}
@@ -125,19 +123,18 @@ func TestFunc_AddCourse_AlreadyExsist(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
 	}
 	defer c.Close()
-	
-	resp, err := c.AddCourse(
-		context.Background(), 
-		&coursesservice.AddCourseReq{
-			Name: "course",
-			ImgURL: "img",
 
+	resp, err := c.AddCourse(
+		context.Background(),
+		&coursesservice.AddCourseReq{
+			Name:   "course",
+			ImgURL: "img",
 		},
 	)
 	if err != nil {
@@ -147,11 +144,10 @@ func TestFunc_AddCourse_AlreadyExsist(t *testing.T) {
 	t.Logf("course add with id: %s\n", resp.Id)
 
 	_, err = c.AddCourse(
-		context.Background(), 
+		context.Background(),
 		&coursesservice.AddCourseReq{
-			Name: "course",
+			Name:   "course",
 			ImgURL: "img",
-
 		},
 	)
 
@@ -161,7 +157,7 @@ func TestFunc_AddCourse_AlreadyExsist(t *testing.T) {
 	}
 
 	_, err = c.DeleteCourse(context.Background(), &coursesservice.DeleteCourseReq{Id: resp.Id})
-	if  err != nil {
+	if err != nil {
 		t.Log(err)
 		t.FailNow()
 	}
@@ -174,7 +170,7 @@ func TestFunc_GetCourse(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -182,11 +178,10 @@ func TestFunc_GetCourse(t *testing.T) {
 	defer c.Close()
 
 	resp, err := c.AddCourse(
-		context.Background(), 
+		context.Background(),
 		&coursesservice.AddCourseReq{
-			Name: "course",
+			Name:   "course",
 			ImgURL: "img",
-
 		},
 	)
 	if err != nil {
@@ -195,7 +190,7 @@ func TestFunc_GetCourse(t *testing.T) {
 	}
 	defer func() {
 		_, err = c.DeleteCourse(context.Background(), &coursesservice.DeleteCourseReq{Id: resp.Id})
-		if  err != nil {
+		if err != nil {
 			t.Log(err)
 			t.FailNow()
 		}
@@ -222,7 +217,7 @@ func TestFunc_GetCourse_NotFound(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -243,7 +238,7 @@ func TestFunc_UpdateCourse(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -251,11 +246,10 @@ func TestFunc_UpdateCourse(t *testing.T) {
 	defer c.Close()
 
 	resp, err := c.AddCourse(
-		context.Background(), 
+		context.Background(),
 		&coursesservice.AddCourseReq{
-			Name: "course",
+			Name:   "course",
 			ImgURL: "img",
-
 		},
 	)
 	if err != nil {
@@ -264,7 +258,7 @@ func TestFunc_UpdateCourse(t *testing.T) {
 	}
 	defer func() {
 		_, err = c.DeleteCourse(context.Background(), &coursesservice.DeleteCourseReq{Id: resp.Id})
-		if  err != nil {
+		if err != nil {
 			t.Log(err)
 			t.FailNow()
 		}
@@ -275,11 +269,10 @@ func TestFunc_UpdateCourse(t *testing.T) {
 		context.Background(),
 		&coursesservice.UpdateCourseReq{
 			UpdatedCourse: &coursesservice.Course{
-				Id: resp.Id,
+				Id:   resp.Id,
 				Name: "new_course",
 			},
 		},
-
 	); err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -287,7 +280,7 @@ func TestFunc_UpdateCourse(t *testing.T) {
 
 	if course, err := c.GetCourse(
 		context.Background(),
-		&coursesservice.GetCourseReq{Id: resp.Id},	
+		&coursesservice.GetCourseReq{Id: resp.Id},
 	); err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -303,7 +296,7 @@ func TestFunc_GetAllCourses(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -314,7 +307,7 @@ func TestFunc_GetAllCourses(t *testing.T) {
 		resp, err := c.AddCourse(
 			context.Background(),
 			&coursesservice.AddCourseReq{
-				Name: fmt.Sprintf("course_%v", i),
+				Name:   fmt.Sprintf("course_%v", i),
 				ImgURL: "img",
 			},
 		)
@@ -330,7 +323,7 @@ func TestFunc_GetAllCourses(t *testing.T) {
 			}
 		}(resp.Id)
 		if _, err := c.AddUserInCourse(
-			context.Background(), 
+			context.Background(),
 			&coursesservice.AddUserInCourseReq{CourseID: resp.Id, UserID: "1"},
 		); err != nil {
 			t.Log(err)
@@ -339,14 +332,14 @@ func TestFunc_GetAllCourses(t *testing.T) {
 
 		defer func(CID string) {
 			_, err := c.DeleteUserInCourse(
-				context.Background(), 
+				context.Background(),
 				&coursesservice.DeleteUserInCourseReq{UserID: "1", CourseID: CID})
 			if err != nil {
 				t.Log(err)
 				t.FailNow()
 			}
 		}(resp.Id)
-		
+
 	}
 
 	cs, err := c.GetAllCourses(context.Background(), &coursesservice.GetAllCoursesReq{})
@@ -368,7 +361,7 @@ func TestFunc_GetAllCourses_NotFound(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -388,7 +381,7 @@ func TestFunc_AddTaskHeader(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -399,7 +392,7 @@ func TestFunc_AddTaskHeader(t *testing.T) {
 	if course, err := c.AddCourse(
 		context.Background(),
 		&coursesservice.AddCourseReq{
-			Name: "course",
+			Name:   "course",
 			ImgURL: "img",
 		},
 	); err != nil {
@@ -425,14 +418,14 @@ func TestFunc_AddTaskHeader(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddTaskHeaderReq{
 			CourseId: courseID,
-			Name: "task_header_1",
+			Name:     "task_header_1",
 		},
 	); err != nil {
 		t.Log(err)
 		t.FailNow()
 	} else {
 		t.Logf("Task_header with id: %v was added\n", resp.Id)
-		ID = resp.Id	
+		ID = resp.Id
 	}
 
 	if _, err := c.DeleteTaskHeader(
@@ -453,7 +446,7 @@ func TestFunc_AddTaskHeader_AlreadyExsist(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -464,10 +457,10 @@ func TestFunc_AddTaskHeader_AlreadyExsist(t *testing.T) {
 	if resp, err := c.AddTaskHeader(
 		context.Background(),
 		&coursesservice.AddTaskHeaderReq{
-			Name: "task_header_1",
+			Name:     "task_header_1",
 			CourseId: "2",
 		},
-	);err != nil {
+	); err != nil {
 		t.Log(err)
 		t.FailNow()
 	} else {
@@ -489,7 +482,7 @@ func TestFunc_AddTaskHeader_AlreadyExsist(t *testing.T) {
 	if _, err := c.AddTaskHeader(
 		context.Background(),
 		&coursesservice.AddTaskHeaderReq{
-			Name: "task_header_1",
+			Name:     "task_header_1",
 			CourseId: "2",
 		},
 	); status.Code(err) != codes.AlreadyExists {
@@ -505,7 +498,7 @@ func TestFunc_UpdateTaskHeader(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -517,7 +510,7 @@ func TestFunc_UpdateTaskHeader(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddTaskHeaderReq{
 			CourseId: "0",
-			Name: "task_header_1",
+			Name:     "task_header_1",
 		},
 	); err != nil {
 		t.Log(err)
@@ -526,7 +519,7 @@ func TestFunc_UpdateTaskHeader(t *testing.T) {
 		taskHeaderID = resp.Id
 	}
 	defer func() {
-		if _,  err := c.DeleteTaskHeader(
+		if _, err := c.DeleteTaskHeader(
 			context.Background(),
 			&coursesservice.DeleteTaskHeaderReq{
 				Id: taskHeaderID,
@@ -541,7 +534,7 @@ func TestFunc_UpdateTaskHeader(t *testing.T) {
 		context.Background(),
 		&coursesservice.UpdateTaskHeaderReq{
 			TaskHeader: &coursesservice.TaskHeader{
-				Id: taskHeaderID,
+				Id:   taskHeaderID,
 				Name: "updated_task_header_1",
 			},
 		},
@@ -558,7 +551,7 @@ func TestFunc_AddTask(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -570,9 +563,9 @@ func TestFunc_AddTask(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddTaskReq{
 			TaskHeaderId: "2",
-			Name: "task_1",
-			ImgUrl: "img",
-			ContentURL: "content",
+			Name:         "task_1",
+			ImgUrl:       "img",
+			ContentURL:   "content",
 		},
 	); err != nil {
 		t.Log(err)
@@ -601,7 +594,7 @@ func TestFunc_AddTask_AlreadyExsist(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -613,9 +606,9 @@ func TestFunc_AddTask_AlreadyExsist(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddTaskReq{
 			TaskHeaderId: "2",
-			Name: "task_1",
-			ImgUrl: "img",
-			ContentURL: "content",
+			Name:         "task_1",
+			ImgUrl:       "img",
+			ContentURL:   "content",
 		},
 	); err != nil {
 		t.Log(err)
@@ -640,9 +633,9 @@ func TestFunc_AddTask_AlreadyExsist(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddTaskReq{
 			TaskHeaderId: "2",
-			Name: "task_1",
-			ImgUrl: "img",
-			ContentURL: "content",
+			Name:         "task_1",
+			ImgUrl:       "img",
+			ContentURL:   "content",
 		},
 	); status.Code(err) != codes.AlreadyExists {
 		t.Log(err)
@@ -657,7 +650,7 @@ func TestFunc_UpdateTask(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -669,9 +662,9 @@ func TestFunc_UpdateTask(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddTaskReq{
 			TaskHeaderId: "2",
-			Name: "task_1",
-			ImgUrl: "img",
-			ContentURL: "content",
+			Name:         "task_1",
+			ImgUrl:       "img",
+			ContentURL:   "content",
 		},
 	); err != nil {
 		t.Log(err)
@@ -696,7 +689,7 @@ func TestFunc_UpdateTask(t *testing.T) {
 		context.Background(),
 		&coursesservice.UpdateTaskReq{
 			Task: &coursesservice.Task{
-				Id: taskID,
+				Id:   taskID,
 				Name: "updated_task_1",
 			},
 		},
@@ -713,7 +706,7 @@ func TestFunc_AddUserInCourse(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -724,7 +717,7 @@ func TestFunc_AddUserInCourse(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddUserInCourseReq{
 			CourseID: "2",
-			UserID: "1",
+			UserID:   "1",
 		},
 	); err != nil {
 		t.Log(err)
@@ -735,9 +728,9 @@ func TestFunc_AddUserInCourse(t *testing.T) {
 			context.Background(),
 			&coursesservice.DeleteUserInCourseReq{
 				CourseID: "2",
-				UserID: "1",
+				UserID:   "1",
 			},
-		);err != nil {
+		); err != nil {
 			t.Log(err)
 			t.FailNow()
 		}
@@ -751,7 +744,7 @@ func TestFunc_AddUserInCourse_AlreadyExists(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := client.NewClient("127.0.0.1","5051", opts)
+	c, err := client.NewClient("127.0.0.1", "5051", opts)
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -762,7 +755,7 @@ func TestFunc_AddUserInCourse_AlreadyExists(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddUserInCourseReq{
 			CourseID: "2",
-			UserID: "1",
+			UserID:   "1",
 		},
 	); err != nil {
 		t.Log(err)
@@ -774,9 +767,9 @@ func TestFunc_AddUserInCourse_AlreadyExists(t *testing.T) {
 			context.Background(),
 			&coursesservice.DeleteUserInCourseReq{
 				CourseID: "2",
-				UserID: "1",
+				UserID:   "1",
 			},
-		);err != nil {
+		); err != nil {
 			t.Log(err)
 			t.FailNow()
 		}
@@ -786,7 +779,7 @@ func TestFunc_AddUserInCourse_AlreadyExists(t *testing.T) {
 		context.Background(),
 		&coursesservice.AddUserInCourseReq{
 			CourseID: "2",
-			UserID: "1",
+			UserID:   "1",
 		},
 	); status.Code(err) != codes.AlreadyExists {
 		t.Log(err)

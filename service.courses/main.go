@@ -1,18 +1,22 @@
 package main
 
 import (
+	"context"
+	"strings"
 
-	"github.com/0B1t322/service.courses/server"
-	pb "github.com/0B1t322/distanceLearningWebSite/protos/coursesservice"
 	"flag"
 	"fmt"
 	"net"
+
+	pb "github.com/0B1t322/distanceLearningWebSite/protos/coursesservice"
+	"github.com/0B1t322/service.courses/server"
 
 	"github.com/0B1t322/distanceLearningWebSite/pkg/db"
 	"github.com/0B1t322/distanceLearningWebSite/pkg/middleware"
 
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 var (
@@ -33,6 +37,29 @@ func main() {
 		grpc.ChainUnaryInterceptor(
 			middleware.TokenParsesInterceptor(*secretKey),
 			middleware.ErrorLoggerUnaryInterceptor(logger),
+			// TODO make internal pkg for this bulding interceptrit
+			middleware.MethodsCheckerUnaryInterceptor(
+				func(ctx context.Context) bool {
+					md, ok := metadata.FromIncomingContext(ctx)
+					if !ok {
+						logger.Warn("Error on methodchecker: cant take metadata")
+						return false
+					}
+					role := md.Get("role")[0]
+					logger.Info(role)
+					if !strings.EqualFold(role, "admin") {
+						return false
+					}
+
+					return  true
+				},
+				func() map[string]struct{} {
+					m := make(map[string]struct{})
+					m["addcourse"] = struct{}{}
+
+					return m
+				}(),
+			),
 		),
 	}
 
